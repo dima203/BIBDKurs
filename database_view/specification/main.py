@@ -1,6 +1,6 @@
 from database_view import BaseRecord, BaseDataBaseView
 
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 
 @dataclass()
@@ -9,25 +9,15 @@ class Specification(BaseRecord):
     contractCode: str
     customerCode: str
     sptCode: str
-    workCodes: list[str]
+    workCode: list[str]
     cost: int
-
-    def to_dict(self) -> dict:
-        return {
-            'specificationCode': self.specificationCode,
-            'contractCode': self.contractCode,
-            'customerCode': self.customerCode,
-            'sptCode': self.sptCode,
-            'workCode': self.workCodes,
-            'cost': self.cost
-        }
 
     def __eq__(self, other: 'Specification') -> bool:
         return (self.specificationCode == other.specificationCode
                 and self.contractCode == other.contractCode
                 and self.customerCode == other.customerCode
                 and self.sptCode == other.sptCode
-                and sorted(self.workCodes) == sorted(other.workCodes)
+                and sorted(self.workCode) == sorted(other.workCode)
                 and self.cost == other.cost)
 
 
@@ -45,8 +35,8 @@ class SpecificationList(BaseDataBaseView):
         return Specification(*records[0][:4], work_codes, *records[0][5:])
 
     def add(self, specification: Specification) -> None:
-        for work_code in specification.workCodes:
-            _specification = specification.to_dict()
+        for work_code in specification.workCode:
+            _specification = asdict(specification)
             _specification['workCode'] = work_code
             self._database.add_record(self.table_name, _specification)
         self._database.commit()

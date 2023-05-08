@@ -1,13 +1,12 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 from database import DataBase
 
 
 @dataclass()
 class BaseRecord(ABC):
-    @abstractmethod
-    def to_dict(self) -> dict: ...
+    pass
 
 
 class BaseDataBaseView(ABC):
@@ -23,7 +22,7 @@ class BaseDataBaseView(ABC):
         return self.record_type(*self._database.get_record(self.table_name, self.id_name, record_id)[0])
 
     def add(self, record: BaseRecord) -> None:
-        self._database.add_record(self.table_name, record.to_dict())
+        self._database.add_record(self.table_name, asdict(record))
         self._database.commit()
 
     def delete(self, record_id: str) -> None:
@@ -31,8 +30,8 @@ class BaseDataBaseView(ABC):
         self._database.commit()
 
     def update(self, record_id: str, record: BaseRecord) -> None:
-        self._database.update_record(self.table_name, self.id_name, record_id, record.to_dict())
+        self._database.update_record(self.table_name, self.id_name, record_id, asdict(record))
         self._database.commit()
 
     def get_table(self) -> list[BaseRecord]:
-        return [self.record_type(*customer) for customer in self._database.get_records_from_table(self.table_name)]
+        return [self.record_type(*record) for record in self._database.get_records_from_table(self.table_name)]
