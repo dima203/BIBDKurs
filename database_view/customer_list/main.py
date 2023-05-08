@@ -25,21 +25,4 @@ class CustomerList(BaseDataBaseView):
         self.table_name = 'Список клиентов СПТ'
         self.id_name = 'customerCode'
         self.fields = ('customerCode', 'customerName', 'customerLocation', 'customerPhone')
-
-    def get(self, customer_id: str) -> Customer:
-        return Customer(*self._database.get_record(self.table_name, self.id_name, customer_id)[0])
-
-    def add(self, customer: Customer) -> None:
-        self._database.add_record(self.table_name, customer.to_dict())
-        self._database.commit()
-
-    def delete(self, customer_id: str) -> None:
-        self._database.delete_record(self.table_name, self.id_name, customer_id)
-        self._database.commit()
-
-    def update(self, customer_id: str, customer: Customer) -> None:
-        self._database.update_record(self.table_name, self.id_name, customer_id, customer.to_dict())
-        self._database.commit()
-
-    def get_table(self) -> list[Customer]:
-        return [Customer(*customer) for customer in self._database.get_records_from_table(self.table_name)]
+        self.record_type = Customer
