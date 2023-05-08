@@ -18,12 +18,12 @@ class TestDataBase:
             self.database.get_record("Каталог работ", 'workCode', '1')
 
     def test_update_record(self) -> None:
-        record = self.database.get_record("Каталог работ", 'workCode', '021019')
+        record = self.database.get_record("Каталог работ", 'workCode', '021019')[0]
         record_dict = dict(workCode=record[0], workPrice=record[1], workTime=record[2])
         record_dict['workPrice'] = 27
         self.database.update_record("Каталог работ", 'workCode', '021019', record_dict)
         self.database.commit()
-        assert self.database.get_record("Каталог работ", 'workCode', '021019') == tuple(record_dict.values())
+        assert self.database.get_record("Каталог работ", 'workCode', '021019')[0] == tuple(record_dict.values())
 
     def test_add_record(self) -> None:
         record = {

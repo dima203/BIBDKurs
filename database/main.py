@@ -21,9 +21,9 @@ class DataBase:
         record = self.__cursor.execute(f'''
             SELECT * FROM "{table_name}"
             WHERE {id_name} = '{record_id}'
-        ''').fetchone()
+        ''').fetchall()
 
-        if record is None:
+        if record is None or not record:
             raise KeyError(f'Key {record_id} is not in "{table_name}"')
 
         return record

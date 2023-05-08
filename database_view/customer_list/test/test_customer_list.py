@@ -13,8 +13,8 @@ class TestCustomerList:
         assert customer.customerCode == '020651'
 
     def test_add_customer(self) -> None:
-        spt = Customer('020657', 'TestSPT', 'шт', 50)
-        self.customer_list.add(spt)
+        customer = Customer('020657', 'Test T. T.', 'Tut', '66-66-66')
+        self.customer_list.add(customer)
         assert self.customer_list.get('020657')
 
     def test_delete_customer(self) -> None:

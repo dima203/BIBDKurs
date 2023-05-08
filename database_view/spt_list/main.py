@@ -27,7 +27,7 @@ class SPTList(BaseDataBaseView):
         self.fields = ('sptCode', 'sptName', 'sptIzm', 'sptPrice')
 
     def get(self, spt_id: str) -> SPT:
-        return SPT(*self._database.get_record(self.table_name, self.id_name, spt_id))
+        return SPT(*self._database.get_record(self.table_name, self.id_name, spt_id)[0])
 
     def add(self, spt: SPT) -> None:
         self._database.add_record(self.table_name, spt.to_dict())

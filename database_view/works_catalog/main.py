@@ -25,7 +25,7 @@ class WorksCatalog(BaseDataBaseView):
         self.fields = ('workCode', 'workPrice', 'workTime')
 
     def get(self, work_id: str) -> Work:
-        return Work(*self._database.get_record(self.table_name, self.id_name, work_id))
+        return Work(*self._database.get_record(self.table_name, self.id_name, work_id)[0])
 
     def add(self, work: Work) -> None:
         self._database.add_record(self.table_name, work.to_dict())

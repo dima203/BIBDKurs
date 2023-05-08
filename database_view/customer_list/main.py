@@ -27,7 +27,7 @@ class CustomerList(BaseDataBaseView):
         self.fields = ('customerCode', 'customerName', 'customerLocation', 'customerPhone')
 
     def get(self, customer_id: str) -> Customer:
-        return Customer(*self._database.get_record(self.table_name, self.id_name, customer_id))
+        return Customer(*self._database.get_record(self.table_name, self.id_name, customer_id)[0])
 
     def add(self, customer: Customer) -> None:
         self._database.add_record(self.table_name, customer.to_dict())

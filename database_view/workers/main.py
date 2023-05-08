@@ -31,7 +31,7 @@ class Workers(BaseDataBaseView):
         self.fields = ('workerCode', 'workerFIO', 'professionCode', 'hireDate', 'workerLocation', 'workerPhone')
 
     def get(self, worker_id: str) -> Worker:
-        return Worker(*self._database.get_record(self.table_name, self.id_name, worker_id))
+        return Worker(*self._database.get_record(self.table_name, self.id_name, worker_id)[0])
 
     def add(self, worker: Worker) -> None:
         self._database.add_record(self.table_name, worker.to_dict())
