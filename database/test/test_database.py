@@ -23,7 +23,7 @@ class TestDataBase:
         record_dict['workPrice'] = 27
         self.database.update_record("Каталог работ", 'workCode', '021019', record_dict)
         self.database.commit()
-        assert self.database.get_record("Каталог работ", 'workCode', '021019') == list(record_dict.values())
+        assert self.database.get_record("Каталог работ", 'workCode', '021019') == tuple(record_dict.values())
 
     def test_add_record(self) -> None:
         record = {

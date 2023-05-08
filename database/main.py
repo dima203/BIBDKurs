@@ -26,7 +26,7 @@ class DataBase:
         if record is None:
             raise KeyError(f'Key {record_id} is not in "{table_name}"')
 
-        return list(record)
+        return record
 
     def update_record(self, table_name: str, id_name: str, record_id: str, record_data: dict) -> None:
         set_string = ''
