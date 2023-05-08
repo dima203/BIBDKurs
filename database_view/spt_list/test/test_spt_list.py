@@ -3,14 +3,14 @@ from pytest import raises
 from database_view import SPTList, SPT
 
 
-class TestWorkers:
+class TestSPTList:
     def setup_class(self) -> None:
         self.spt_list = SPTList(True)
 
     def test_get_spt(self) -> None:
-        worker = self.spt_list.get('002006389')
-        assert isinstance(worker, SPT)
-        assert worker.sptCode == '002006389'
+        spt = self.spt_list.get('002006389')
+        assert isinstance(spt, SPT)
+        assert spt.sptCode == '002006389'
 
     def test_add_spt(self) -> None:
         spt = SPT('002008389', 'TestSPT', 'шт', 50)
@@ -23,7 +23,7 @@ class TestWorkers:
             assert self.spt_list.get('002035784')
 
     def test_update_spt(self) -> None:
-        spt = SPT('002006389', 'Оповещатель пожарный комбинированный', 'шт', 57)
+        spt = SPT('002006389', 'Test', 'шт', 57)
         self.spt_list.update('002006389', spt)
         assert self.spt_list.get('002006389') == spt
 
