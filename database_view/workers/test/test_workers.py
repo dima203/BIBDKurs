@@ -1,6 +1,6 @@
 from pytest import raises
 
-from database_view.workers import Workers, Worker
+from database_view import Workers, Worker
 
 
 class TestWorkers:

@@ -1,6 +1,6 @@
 from pytest import raises
 
-from database_view.works_catalog import WorksCatalog, Work
+from database_view import WorksCatalog, Work
 
 
 class TestWorksCatalog:
