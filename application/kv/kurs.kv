@@ -1,52 +1,164 @@
-MDScreen:
-    MDNavigationLayout:
-        MDScreenManager:
-            id: table_screen_manager
-            MDScreen:
-                name: 'table_choose'
+MDScreenManager:
+    id: main_screen_manager
 
-                MDBoxLayout:
-                    orientation: 'vertical'
-                    size_hint_y: 0.9
-                    spacing: 20
-                    padding: 20
+    MDScreen:
+        name: 'main'
 
-                    MDRectangleFlatButton:
-                        text: "Список клиентов СПТ"
-                        on_press: table_screen_manager.current = 'customer_view'
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 0.9
+            spacing: 20
+            padding: 20
 
-                    MDRectangleFlatButton:
-                        text: "Справочник работников цеха"
-                        on_press: table_screen_manager.current = 'customer_view'
+            MDRectangleFlatButton:
+                size_hint_x: 0.5
+                pos_hint: {"center_x": 0.5}
+                text: "Справочные документы"
+                on_press: main_screen_manager.current = 'tables'
 
-                Navigation:
+        Navigation:
+            title: "АРМ \"Начальника производственного цеха предприятия\""
 
-            MDScreen:
-                name: 'customer_view'
+    MDScreen:
+        name: 'tables'
 
-                MDBoxLayout:
-                    orientation: 'vertical'
-                    size_hint_y: 0.9
+        MDNavigationLayout:
+            MDScreenManager:
+                id: table_screen_manager
 
-                    CustomerView:
-                        id: customer_list
+                MDScreen:
+                    name: 'table_choose'
 
                     MDBoxLayout:
-                        orientation: 'horizontal'
-                        size_hint_y: 0.1
+                        orientation: 'vertical'
+                        size_hint_y: 0.9
+                        spacing: 20
+                        padding: 20
 
                         MDRectangleFlatButton:
-                            text: "Назад"
-                            size_hint_x: 0.2
-                            on_press: table_screen_manager.current = 'table_choose'
-                        MDLabel:
-                            size_hint_x: 0.8
+                            size_hint_x: 0.5
+                            pos_hint: {"center_x": 0.5}
+                            text: "Список клиентов СПТ"
+                            on_press: table_screen_manager.current = 'customer_view'
 
-                Navigation:
+                        MDRectangleFlatButton:
+                            size_hint_x: 0.5
+                            pos_hint: {"center_x": 0.5}
+                            text: "Справочник работников цеха"
+                            on_press: table_screen_manager.current = 'worker_view'
+
+                        MDRectangleFlatButton:
+                            size_hint_x: 0.5
+                            pos_hint: {"center_x": 0.5}
+                            text: "Каталог работ"
+                            on_press: table_screen_manager.current = 'work_view'
+
+                        MDRectangleFlatButton:
+                            size_hint_x: 0.5
+                            pos_hint: {"center_x": 0.5}
+                            text: "Справочник СПТ"
+                            on_press: table_screen_manager.current = 'spt_view'
+
+                        MDRectangleFlatButton:
+                            size_hint_x: 0.5
+                            pos_hint: {"center_x": 0.5}
+                            text: "Назад"
+                            on_press: main_screen_manager.current = 'main'
+
+                MDScreen:
+                    name: 'customer_view'
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: 0.9
+                        spacing: 20
+                        padding: 20
+
+                        CustomerView:
+                            id: customer_list
+
+                        MDBoxLayout:
+                            orientation: 'horizontal'
+                            size_hint_y: 0.1
+
+                            MDRectangleFlatButton:
+                                text: "Назад"
+                                size_hint_x: 0.2
+                                on_press: table_screen_manager.current = 'table_choose'
+                            MDLabel:
+                                size_hint_x: 0.8
+
+                MDScreen:
+                    name: 'worker_view'
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: 0.9
+                        spacing: 20
+                        padding: 20
+
+                        WorkerView:
+                            id: worker_list
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: 0.1
+
+                            MDRectangleFlatButton:
+                                text: "Назад"
+                                size_hint_x: 0.5
+                                pos_hint: {"center_x": 0.5}
+                                on_press: table_screen_manager.current = 'table_choose'
+
+                MDScreen:
+                    name: 'work_view'
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: 0.9
+                        spacing: 20
+                        padding: 20
+
+                        WorkView:
+                            id: work_list
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: 0.1
+
+                            MDRectangleFlatButton:
+                                text: "Назад"
+                                size_hint_x: 0.5
+                                pos_hint: {"center_x": 0.5}
+                                on_press: table_screen_manager.current = 'table_choose'
+
+                MDScreen:
+                    name: 'spt_view'
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: 0.9
+                        spacing: 20
+                        padding: 20
+
+                        SPTView:
+                            id: spt_list
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: 0.1
+
+                            MDRectangleFlatButton:
+                                text: "Назад"
+                                size_hint_x: 0.5
+                                pos_hint: {"center_x": 0.5}
+                                on_press: table_screen_manager.current = 'table_choose'
+
+        Navigation:
+            title: "Справочные документы"
 
 
 <Navigation>:
-    title: "АРМ \"Начальника производственного цеха предприятия\""
     pos_hint: {"top": 1}
     size_hint_y: 0.1
 
@@ -91,3 +203,131 @@ MDScreen:
                     icon_color: app.error_color
                     pos_hint: {"center_y": .5}
                     on_press: app.delete_customer(root)
+
+
+<WorkerCard>:
+    size_hint_y: None
+    height: content.height
+
+    MDCardSwipeFrontBox:
+        MDGridLayout:
+            height: 100
+            size_hint_y: None
+            cols: 7
+            rows: 1
+            spacing: 10
+            id: content
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.workerCode
+            MDTextField:
+                text: root.workerFIO
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.professionCode
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.hireDate
+            MDTextField:
+                text: root.workerLocation
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.workerPhone
+            MDBoxLayout:
+                width: 50
+                size_hint_x: None
+                orientation: 'vertical'
+                MDIconButton:
+                    icon: "content-save-edit"
+                    theme_icon_color: "Custom"
+                    icon_color: app.save_color
+                    on_press: app.update_worker(root)
+
+                MDIconButton:
+                    icon: "trash-can"
+                    theme_icon_color: "Custom"
+                    icon_color: app.error_color
+                    pos_hint: {"center_y": .5}
+                    on_press: app.delete_worker(root)
+
+
+<WorkCard>:
+    size_hint_y: None
+    height: 100
+
+    MDCardSwipeFrontBox:
+        MDGridLayout:
+            height: 100
+            size_hint_y: None
+            cols: 4
+            rows: 1
+            spacing: 10
+            MDTextField:
+                text: root.workCode
+            MDTextField:
+                text: str(root.workPrice)
+            MDTextField:
+                text: str(root.workTime)
+            MDBoxLayout:
+                width: 50
+                size_hint_x: None
+                orientation: 'vertical'
+                MDIconButton:
+                    icon: "content-save-edit"
+                    theme_icon_color: "Custom"
+                    icon_color: app.save_color
+                    on_press: app.update_work(root)
+
+                MDIconButton:
+                    icon: "trash-can"
+                    theme_icon_color: "Custom"
+                    icon_color: app.error_color
+                    pos_hint: {"center_y": .5}
+                    on_press: app.delete_work(root)
+
+
+<SPTCard>:
+    size_hint_y: None
+    height: 100
+
+    MDCardSwipeFrontBox:
+        MDGridLayout:
+            height: 100
+            size_hint_y: None
+            cols: 5
+            rows: 1
+            spacing: 10
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.sptCode
+            MDTextField:
+                text: root.sptName
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.sptIzm
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: str(root.sptPrice)
+            MDBoxLayout:
+                width: 50
+                size_hint_x: None
+                orientation: 'vertical'
+                MDIconButton:
+                    icon: "content-save-edit"
+                    theme_icon_color: "Custom"
+                    icon_color: app.save_color
+                    on_press: app.update_spt(root)
+
+                MDIconButton:
+                    icon: "trash-can"
+                    theme_icon_color: "Custom"
+                    icon_color: app.error_color
+                    pos_hint: {"center_y": .5}
+                    on_press: app.delete_spt(root)
