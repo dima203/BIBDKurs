@@ -2,6 +2,42 @@ MDScreenManager:
     id: main_screen_manager
 
     MDScreen:
+        name: 'auth'
+
+        MDFloatLayout:
+            orientation: 'vertical'
+            size_hint_y: 0.9
+            spacing: 20
+            padding: 20
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                adaptive_height: True
+                min_height: 1
+                spacing: 10
+                size_hint: 0.5, None
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                MDBoxLayout:
+                    adaptive_width: True
+                    pos_hint: {"center_x": 0.5}
+                    MDLabel:
+                        text: "Авторизация"
+                MDTextField:
+                    id: login
+                    size_hint:
+                MDTextField:
+                    id: password
+                    password: True
+                MDRectangleFlatButton:
+                    text: "Войти"
+                    on_press: app.auth(login.text, password.text)
+                    pos_hint: {"center_x": 0.5}
+
+        Navigation:
+            title: "АРМ \"Начальника производственного цеха предприятия\""
+
+    MDScreen:
         name: 'main'
 
         MDBoxLayout:

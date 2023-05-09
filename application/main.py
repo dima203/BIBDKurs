@@ -11,6 +11,8 @@ from kivymd.uix.button import MDRectangleFlatButton, MDIconButton
 from kivy.properties import StringProperty, NumericProperty, ListProperty, ObjectProperty
 from kivy.animation import Animation
 
+import hashlib
+
 from database_view import CustomerList, Customer, Workers, Worker, WorksCatalog, Work, SPTList, SPT,\
     SpecificationList, Specification, TaskList, Task
 
@@ -512,6 +514,12 @@ class KursApp(MDApp):
         self.specification_view = SpecificationList(debug)
         self.task_view = TaskList(debug)
 
+    def auth(self, login: str, password: str) -> None:
+        m = hashlib.sha256()
+        m.update(password.encode())
+        if login == 'admin' and m.hexdigest() == '0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c':
+            self.root.current = 'main'
+
     def add_customer(self):
         self.customer_view.add(Customer('', '', '', ''))
 
@@ -569,9 +577,10 @@ class KursApp(MDApp):
 
     def update_specification(self, card: SpecificationCard):
         fields = [widget.text for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
-        work_codes = [widget.text for widget in card.content.children if isinstance(widget, MDTextField)]
+        work_codes = [widget.text for widget in card.content.children if isinstance(widget, MDTextField)][::-1]
         self.specification_view.update(card.id, Specification(*fields[:4], work_codes, *fields[4:]))
         card.id = fields[0]
+        card.workCode = work_codes
 
     def add_task(self):
         self.task_view.add(Task('', '', '', [''], [''], 0))
