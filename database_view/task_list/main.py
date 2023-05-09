@@ -46,3 +46,13 @@ class TaskList(BaseDataBaseView):
     def update(self, specification_id: str, specification: Task) -> None:
         self.delete(specification_id)
         self.add(specification)
+
+    def get_table(self) -> list[Task]:
+        tasks = {}
+        for record in self._database.get_records_from_table(self.table_name):
+            if record[0] in tasks:
+                tasks[record[0]].workCode.append(record[3])
+                tasks[record[0]].workerCode.append(record[4])
+            else:
+                tasks[record[0]] = Task(*record[:3], [record[3]], [record[4]], *record[5:])
+        return list(tasks.values())

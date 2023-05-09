@@ -44,3 +44,12 @@ class SpecificationList(BaseDataBaseView):
     def update(self, specification_id: str, specification: Specification) -> None:
         self.delete(specification_id)
         self.add(specification)
+
+    def get_table(self) -> list[Specification]:
+        specifications = {}
+        for record in self._database.get_records_from_table(self.table_name):
+            if record[0] in specifications:
+                specifications[record[0]].workCode.append(record[4])
+            else:
+                specifications[record[0]] = Specification(*record[:4], [record[4]], *record[5:])
+        return list(specifications.values())
