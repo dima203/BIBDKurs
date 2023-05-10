@@ -67,6 +67,11 @@ class DataBase:
         self.__connection.backup(backup_connection)
         backup_connection.close()
 
+    def restore(self, path: str) -> None:
+        restore_connection = sqlite3.connect(path)
+        restore_connection.backup(self.__connection)
+        restore_connection.close()
+
     def __del__(self) -> None:
         self.__cursor.close()
         self.__connection.close()

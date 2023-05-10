@@ -3,14 +3,16 @@ from kivymd.uix.toolbar import MDTopAppBar
 from kivymd.uix.navigationdrawer import MDNavigationDrawer
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.screen import MDScreen
-from kivy.lang import Builder
+from kivymd.uix.filemanager import MDFileManager
+from kivymd.toast import toast
 
 import hashlib
 import datetime
 import os
+import pathlib
 
 from views import CustomerView, WorkerView, WorkView, SPTView, SpecificationView, TaskView
-from cards import Card, CustomerCard, WorkerCard, WorkCard, SpecificationCard, TaskCard
+from cards import Card
 from database_view import CustomerList, Customer, Workers, Worker, WorksCatalog, Work, SPTList, SPT,\
     SpecificationList, Specification, TaskList, Task, BaseDataBaseView, BaseRecord
 from database import DataBase
@@ -52,6 +54,12 @@ class KursApp(MDApp):
         self.specification_view = SpecificationList(debug)
         self.task_view = TaskList(debug)
 
+        self.is_manager_open = False
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=self.select_path,
+        )
+
     def auth(self, login: str, password: str) -> None:
         m = hashlib.sha256()
         m.update(password.encode())
@@ -65,6 +73,19 @@ class KursApp(MDApp):
         if not os.path.exists(rf'backup/{current_datetime}.db'):
             DataBase(self.debug).backup(rf'backup/{current_datetime}.db')
 
+    def file_manager_open(self):
+        self.file_manager.show(str(pathlib.Path(os.getcwd() + '/backup/')))
+        self.is_manager_open = True
+
+    def select_path(self, path):
+        self.exit_manager()
+        toast(path)
+        DataBase(self.debug).restore(path)
+
+    def exit_manager(self, *args):
+        self.is_manager_open = False
+        self.file_manager.close()
+
     def add(self, table_view: BaseDataBaseView, record: BaseRecord):
         table_view.add(record)
 
@@ -72,7 +93,7 @@ class KursApp(MDApp):
         self.customer_view.delete(card.id)
         self.root.ids.customer_list.records_list.remove_widget(card)
 
-    def update_customer(self, card: CustomerCard):
+    def update_customer(self, card: Card):
         fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
         self.customer_view.update(card.id, Customer(*[field.text for field in fields]))
         card.id = fields[0].text
@@ -81,7 +102,7 @@ class KursApp(MDApp):
         self.worker_view.delete(card.id)
         self.root.ids.worker_list.records_list.remove_widget(card)
 
-    def update_worker(self, card: WorkerCard):
+    def update_worker(self, card: Card):
         fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
         self.worker_view.update(card.id, Worker(*[field.text for field in fields]))
         card.id = fields[0].text
@@ -90,7 +111,7 @@ class KursApp(MDApp):
         self.work_view.delete(card.id)
         self.root.ids.work_list.records_list.remove_widget(card)
 
-    def update_work(self, card: WorkerCard):
+    def update_work(self, card: Card):
         fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
         self.work_view.update(card.id, Work(*[field.text for field in fields]))
         card.id = fields[0].text
@@ -99,7 +120,7 @@ class KursApp(MDApp):
         self.spt_view.delete(card.id)
         self.root.ids.spt_list.records_list.remove_widget(card)
 
-    def update_spt(self, card: WorkerCard):
+    def update_spt(self, card: Card):
         fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
         self.spt_view.update(card.id, SPT(*[field.text for field in fields]))
         card.id = fields[0].text
@@ -111,7 +132,7 @@ class KursApp(MDApp):
         self.specification_view.delete(card.id)
         self.root.ids.specification_list.records_list.remove_widget(card)
 
-    def update_specification(self, card: SpecificationCard):
+    def update_specification(self, card: Card):
         fields = [widget.text for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
         work_codes = [widget.text for widget in card.content.children if isinstance(widget, MDTextField)][::-1]
         self.specification_view.update(card.id, Specification(*fields[:4], work_codes, *fields[4:]))
@@ -125,7 +146,7 @@ class KursApp(MDApp):
         self.task_view.delete(card.id)
         self.root.ids.task_list.records_list.remove_widget(card)
 
-    def update_task(self, card: TaskCard):
+    def update_task(self, card: Card):
         fields = [widget.text for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
         work_codes = [widget.text for widget in card.content.children if isinstance(widget, MDTextField)][::-1]
         self.task_view.update(card.id, Task(*fields[:3], work_codes[::2], work_codes[1::2], *fields[3:]))
@@ -136,5 +157,5 @@ class KursApp(MDApp):
 
 # for tests
 if __name__ == '__main__':
-    application = KursApp(True, False)
+    application = KursApp(True)
     application.run()

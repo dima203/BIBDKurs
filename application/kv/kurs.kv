@@ -69,6 +69,12 @@ MDScreenManager:
                     text: "Оперативные документы"
                     on_press: main_screen_manager.current = 'operation_tables'
 
+                MDRectangleFlatButton:
+                    size_hint_x: 1
+                    pos_hint: {"center_x": 0.5}
+                    text: "Восстановление данных"
+                    on_press: main_screen_manager.current = 'restore'
+
     MDScreen:
         name: 'tables'
 
@@ -98,25 +104,25 @@ MDScreenManager:
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Список клиентов СПТ"
-                                on_press: table_screen_manager.current = 'customer_view'
+                                on_press: table_screen_manager.current = 'customer_view'; customer_list.refresh()
 
                             MDRectangleFlatButton:
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Справочник работников цеха"
-                                on_press: table_screen_manager.current = 'worker_view'
+                                on_press: table_screen_manager.current = 'worker_view'; worker_list.refresh()
 
                             MDRectangleFlatButton:
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Каталог работ"
-                                on_press: table_screen_manager.current = 'work_view'
+                                on_press: table_screen_manager.current = 'work_view'; work_list.refresh()
 
                             MDRectangleFlatButton:
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Справочник СПТ"
-                                on_press: table_screen_manager.current = 'spt_view'
+                                on_press: table_screen_manager.current = 'spt_view'; spt_list.refresh()
 
                             MDRectangleFlatButton:
                                 size_hint_x: 1
@@ -245,13 +251,13 @@ MDScreenManager:
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Спецификация на выполнение работ"
-                                on_press: operation_table_screen_manager.current = 'specification_view'
+                                on_press: operation_table_screen_manager.current = 'specification_view'; specification_list.refresh()
 
                             MDRectangleFlatButton:
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Наряд-задание"
-                                on_press: operation_table_screen_manager.current = 'task_view'
+                                on_press: operation_table_screen_manager.current = 'task_view'; task_list.refresh()
 
                             MDRectangleFlatButton:
                                 size_hint_x: 1
@@ -304,6 +310,35 @@ MDScreenManager:
                             TableBackButton:
                                 screen_manager: operation_table_screen_manager
                                 back_screen: 'table_choose'
+
+    MDScreen:
+        name: 'restore'
+
+        Navigation:
+            title: "Восстановление данных"
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 0.9
+            spacing: 20
+            padding: 20
+
+            MDFloatLayout:
+                size_hint_y: 0.9
+
+                MDIconButton:
+                    text: "Open manager"
+                    icon: "folder"
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    on_release: app.file_manager_open()
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                size_hint_y: 0.1
+
+                TableBackButton:
+                    screen_manager: main_screen_manager
+                    back_screen: 'main'
 
 
 <TableBackButton@MDRectangleFlatButton>:
