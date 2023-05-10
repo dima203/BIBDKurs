@@ -1,0 +1,274 @@
+<CustomerCard>:
+    size_hint_y: None
+    height: content.height
+
+    MDCardSwipeFrontBox:
+        MDGridLayout:
+            height: 100
+            size_hint_y: None
+            cols: 5
+            rows: 1
+            spacing: 10
+            id: content
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.customerCode
+            MDTextField:
+                text: root.customerName
+            MDTextField:
+                text: root.customerLocation
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.customerPhone
+            MDBoxLayout:
+                width: 50
+                size_hint_x: None
+                orientation: 'vertical'
+                MDIconButton:
+                    icon: "content-save-edit"
+                    theme_icon_color: "Custom"
+                    icon_color: app.save_color
+                    on_press: app.update_customer(root)
+
+                MDIconButton:
+                    icon: "trash-can"
+                    theme_icon_color: "Custom"
+                    icon_color: app.error_color
+                    pos_hint: {"center_y": .5}
+                    on_press: app.delete_customer(root)
+
+
+<WorkerCard>:
+    size_hint_y: None
+    height: content.height
+
+    MDCardSwipeFrontBox:
+        MDGridLayout:
+            height: 100
+            size_hint_y: None
+            cols: 7
+            rows: 1
+            spacing: 10
+            id: content
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.workerCode
+            MDTextField:
+                text: root.workerFIO
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.professionCode
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.hireDate
+            MDTextField:
+                text: root.workerLocation
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.workerPhone
+            MDBoxLayout:
+                width: 50
+                size_hint_x: None
+                orientation: 'vertical'
+                MDIconButton:
+                    icon: "content-save-edit"
+                    theme_icon_color: "Custom"
+                    icon_color: app.save_color
+                    on_press: app.update_worker(root)
+
+                MDIconButton:
+                    icon: "trash-can"
+                    theme_icon_color: "Custom"
+                    icon_color: app.error_color
+                    pos_hint: {"center_y": .5}
+                    on_press: app.delete_worker(root)
+
+
+<WorkCard>:
+    size_hint_y: None
+    height: 100
+
+    MDCardSwipeFrontBox:
+        MDGridLayout:
+            height: 100
+            size_hint_y: None
+            cols: 4
+            rows: 1
+            spacing: 10
+            MDTextField:
+                text: root.workCode
+            MDTextField:
+                text: str(root.workPrice)
+            MDTextField:
+                text: str(root.workTime)
+            MDBoxLayout:
+                width: 50
+                size_hint_x: None
+                orientation: 'vertical'
+                MDIconButton:
+                    icon: "content-save-edit"
+                    theme_icon_color: "Custom"
+                    icon_color: app.save_color
+                    on_press: app.update_work(root)
+
+                MDIconButton:
+                    icon: "trash-can"
+                    theme_icon_color: "Custom"
+                    icon_color: app.error_color
+                    pos_hint: {"center_y": .5}
+                    on_press: app.delete_work(root)
+
+
+<SPTCard>:
+    size_hint_y: None
+    height: 100
+
+    MDCardSwipeFrontBox:
+        MDGridLayout:
+            height: 100
+            size_hint_y: None
+            cols: 5
+            rows: 1
+            spacing: 10
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.sptCode
+            MDTextField:
+                text: root.sptName
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.sptIzm
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: str(root.sptPrice)
+            MDBoxLayout:
+                width: 50
+                size_hint_x: None
+                orientation: 'vertical'
+                MDIconButton:
+                    icon: "content-save-edit"
+                    theme_icon_color: "Custom"
+                    icon_color: app.save_color
+                    on_press: app.update_spt(root)
+
+                MDIconButton:
+                    icon: "trash-can"
+                    theme_icon_color: "Custom"
+                    icon_color: app.error_color
+                    pos_hint: {"center_y": .5}
+                    on_press: app.delete_spt(root)
+
+
+<SpecificationCard>:
+    size_hint_y: None
+    height: 100
+    adaptive_height: True
+
+    MDCardSwipeFrontBox:
+        MDGridLayout:
+            height: 100
+            size_hint_y: None
+            cols: 7
+            rows: 1
+            spacing: 10
+            adaptive_height: True
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.specificationCode
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.contractCode
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.customerCode
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.sptCode
+            MDBoxLayout:
+                orientation: 'vertical'
+                id: panel_layout
+                adaptive_height: True
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: str(root.cost)
+            MDBoxLayout:
+                width: 50
+                size_hint_x: None
+                orientation: 'vertical'
+                MDIconButton:
+                    icon: "content-save-edit"
+                    theme_icon_color: "Custom"
+                    icon_color: app.save_color
+                    on_press: app.update_specification(root)
+
+                MDIconButton:
+                    icon: "trash-can"
+                    theme_icon_color: "Custom"
+                    icon_color: app.error_color
+                    pos_hint: {"center_y": .5}
+                    on_press: app.delete_specification(root)
+
+
+<TaskCard>:
+    size_hint_y: None
+    height: 100
+    adaptive_height: True
+
+    MDCardSwipeFrontBox:
+        MDGridLayout:
+            height: 100
+            size_hint_y: None
+            cols: 7
+            rows: 1
+            spacing: 10
+            adaptive_height: True
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.taskCode
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.contractCode
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: root.taskDate
+            MDBoxLayout:
+                orientation: 'vertical'
+                id: panel_layout
+                adaptive_height: True
+            MDTextField:
+                width: 100
+                size_hint_x: None
+                text: str(root.taskCost)
+            MDBoxLayout:
+                width: 50
+                size_hint_x: None
+                orientation: 'vertical'
+                MDIconButton:
+                    icon: "content-save-edit"
+                    theme_icon_color: "Custom"
+                    icon_color: app.save_color
+                    on_press: app.update_task(root)
+
+                MDIconButton:
+                    icon: "trash-can"
+                    theme_icon_color: "Custom"
+                    icon_color: app.error_color
+                    pos_hint: {"center_y": .5}
+                    on_press: app.delete_task(root)
