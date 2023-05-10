@@ -30,14 +30,14 @@
                     icon: "content-save-edit"
                     theme_icon_color: "Custom"
                     icon_color: app.save_color
-                    on_press: app.update_customer(root)
+                    on_press: app.update(root.parent.parent, root)
 
                 MDIconButton:
                     icon: "trash-can"
                     theme_icon_color: "Custom"
                     icon_color: app.error_color
                     pos_hint: {"center_y": .5}
-                    on_press: app.delete_customer(root)
+                    on_press: app.delete(root.parent, root)
 
 
 <WorkerCard>:
@@ -80,14 +80,14 @@
                     icon: "content-save-edit"
                     theme_icon_color: "Custom"
                     icon_color: app.save_color
-                    on_press: app.update_worker(root)
+                    on_press: app.update(root.parent.parent, root)
 
                 MDIconButton:
                     icon: "trash-can"
                     theme_icon_color: "Custom"
                     icon_color: app.error_color
                     pos_hint: {"center_y": .5}
-                    on_press: app.delete_worker(root)
+                    on_press: app.delete(root.parent, root)
 
 
 <WorkCard>:
@@ -115,14 +115,14 @@
                     icon: "content-save-edit"
                     theme_icon_color: "Custom"
                     icon_color: app.save_color
-                    on_press: app.update_work(root)
+                    on_press: app.update(root.parent.parent, root)
 
                 MDIconButton:
                     icon: "trash-can"
                     theme_icon_color: "Custom"
                     icon_color: app.error_color
                     pos_hint: {"center_y": .5}
-                    on_press: app.delete_work(root)
+                    on_press: app.delete(root.parent, root)
 
 
 <SPTCard>:
@@ -158,14 +158,14 @@
                     icon: "content-save-edit"
                     theme_icon_color: "Custom"
                     icon_color: app.save_color
-                    on_press: app.update_spt(root)
+                    on_press: app.update(root.parent.parent, root)
 
                 MDIconButton:
                     icon: "trash-can"
                     theme_icon_color: "Custom"
                     icon_color: app.error_color
                     pos_hint: {"center_y": .5}
-                    on_press: app.delete_spt(root)
+                    on_press: app.delete(root.parent, root)
 
 
 <SpecificationCard>:
@@ -213,14 +213,14 @@
                     icon: "content-save-edit"
                     theme_icon_color: "Custom"
                     icon_color: app.save_color
-                    on_press: app.update_specification(root)
+                    on_press: app.update(root.parent.parent, root)
 
                 MDIconButton:
                     icon: "trash-can"
                     theme_icon_color: "Custom"
                     icon_color: app.error_color
                     pos_hint: {"center_y": .5}
-                    on_press: app.delete_specification(root)
+                    on_press: app.delete(root.parent, root)
 
 
 <TaskCard>:
@@ -264,11 +264,11 @@
                     icon: "content-save-edit"
                     theme_icon_color: "Custom"
                     icon_color: app.save_color
-                    on_press: app.update_task(root)
+                    on_press: app.update(root.parent.parent, root)
 
                 MDIconButton:
                     icon: "trash-can"
                     theme_icon_color: "Custom"
                     icon_color: app.error_color
                     pos_hint: {"center_y": .5}
-                    on_press: app.delete_task(root)
+                    on_press: app.delete(root.parent, root)

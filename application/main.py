@@ -1,17 +1,26 @@
 from kivymd.app import MDApp
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.floatlayout import MDFloatLayout
+from kivymd.uix.label import MDLabel
 from kivymd.uix.toolbar import MDTopAppBar
 from kivymd.uix.navigationdrawer import MDNavigationDrawer
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.filemanager import MDFileManager
+from kivymd.uix.spinner import MDSpinner
+from kivy.clock import Clock
+from kivy.uix.popup import Popup
 from kivymd.toast import toast
 
 import hashlib
 import datetime
 import os
 import pathlib
+from dataclasses import astuple
+from time import sleep
+from threading import Thread
 
-from views import CustomerView, WorkerView, WorkView, SPTView, SpecificationView, TaskView
+from views import TableView, CustomerView, WorkerView, WorkView, SPTView, SpecificationView, TaskView
 from cards import Card
 from database_view import CustomerList, Customer, Workers, Worker, WorksCatalog, Work, SPTList, SPT,\
     SpecificationList, Specification, TaskList, Task, BaseDataBaseView, BaseRecord
@@ -46,6 +55,8 @@ class KursApp(MDApp):
         self.debug = debug
         self.backup = backup
 
+        self.database = DataBase(self.debug)
+
         self.customer_view = CustomerList(debug)
         self.worker_view = Workers(debug)
         self.work_view = WorksCatalog(debug)
@@ -59,6 +70,8 @@ class KursApp(MDApp):
             exit_manager=self.exit_manager,
             select_path=self.select_path,
         )
+        self.loading_screen = None
+        self.current_datetime = None
 
     def auth(self, login: str, password: str) -> None:
         m = hashlib.sha256()
@@ -66,96 +79,100 @@ class KursApp(MDApp):
         if login == 'admin' and m.hexdigest() == '0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c':
             self.root.current = 'main'
 
-        if not self.backup:
-            return
+            if not self.backup:
+                return
 
-        current_datetime = datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
-        if not os.path.exists(rf'backup/{current_datetime}.db'):
-            DataBase(self.debug).backup(rf'backup/{current_datetime}.db')
+            self.current_datetime = datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
+            if not os.path.exists(rf'backup/{self.current_datetime}.db'):
+                self.show_loading('Создание точки восстановления')
+                Clock.schedule_once(self.database_backup, )
+        else:
+            toast('Неверные данные для входа')
+
+    def database_backup(self, dt) -> None:
+        self.database.backup(rf'backup/{self.current_datetime}.db')
+        sleep(5)
+        self.hide_loading()
+
+    def show_loading(self, text: str) -> None:
+        self.loading_screen = Popup(
+            title='',
+            auto_dismiss=False,
+            title_color=self.theme_cls.text_color,
+            separator_color=(0, 0, 0, 0),
+            background='',
+            background_color=(0, 0, 0, 0.5),
+            content=MDFloatLayout(
+                MDFloatLayout(
+                    MDLabel(
+                        text=text,
+                        size_hint_x=0.85,
+                        pos_hint={"center_x": 0.5, "center_y": 0.9},
+                    ),
+                    MDBoxLayout(
+                        padding=20,
+                        size_hint=(0.9, None),
+                        height=3,
+                        pos_hint={"center_x": 0.5, "center_y": 0.8},
+                        md_bg_color=self.theme_cls.primary_color,
+                    ),
+                    MDLabel(
+                        text='Выполнение операции...',
+                        size_hint_x=0.85,
+                        pos_hint={"center_x": 0.5, "center_y": 0.4},
+                    ),
+                    size_hint=(0.5, 0.3),
+                    pos_hint={"center_x": 0.5, "center_y": 0.5},
+                    md_bg_color=self.theme_cls.bg_normal,
+                    padding=20,
+                )
+            ),
+        )
+        self.loading_screen.open()
+
+    def hide_loading(self) -> None:
+        self.loading_screen.dismiss()
+        self.loading_screen = None
 
     def file_manager_open(self):
         self.file_manager.show(str(pathlib.Path(os.getcwd() + '/backup/')))
         self.is_manager_open = True
 
     def select_path(self, path):
-        self.exit_manager()
         toast(path)
         DataBase(self.debug).restore(path)
+        self.exit_manager()
 
     def exit_manager(self, *args):
         self.is_manager_open = False
         self.file_manager.close()
 
+    def exit(self) -> None:
+        self.stop()
+
     def add(self, table_view: BaseDataBaseView, record: BaseRecord):
         table_view.add(record)
 
-    def delete_customer(self, card: Card):
-        self.customer_view.delete(card.id)
-        self.root.ids.customer_list.records_list.remove_widget(card)
-
-    def update_customer(self, card: Card):
-        fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
-        self.customer_view.update(card.id, Customer(*[field.text for field in fields]))
-        card.id = fields[0].text
-
-    def delete_worker(self, card: Card):
-        self.worker_view.delete(card.id)
-        self.root.ids.worker_list.records_list.remove_widget(card)
-
-    def update_worker(self, card: Card):
-        fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
-        self.worker_view.update(card.id, Worker(*[field.text for field in fields]))
-        card.id = fields[0].text
-
-    def delete_work(self, card: Card):
-        self.work_view.delete(card.id)
-        self.root.ids.work_list.records_list.remove_widget(card)
-
-    def update_work(self, card: Card):
-        fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
-        self.work_view.update(card.id, Work(*[field.text for field in fields]))
-        card.id = fields[0].text
-
-    def delete_spt(self, card: Card):
-        self.spt_view.delete(card.id)
-        self.root.ids.spt_list.records_list.remove_widget(card)
-
-    def update_spt(self, card: Card):
-        fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
-        self.spt_view.update(card.id, SPT(*[field.text for field in fields]))
-        card.id = fields[0].text
-
-    def add_specification(self):
-        self.specification_view.add(Specification('', '', '', '', [''], 0))
-
-    def delete_specification(self, card: Card):
-        self.specification_view.delete(card.id)
-        self.root.ids.specification_list.records_list.remove_widget(card)
-
-    def update_specification(self, card: Card):
-        fields = [widget.text for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
-        work_codes = [widget.text for widget in card.content.children if isinstance(widget, MDTextField)][::-1]
-        self.specification_view.update(card.id, Specification(*fields[:4], work_codes, *fields[4:]))
-        card.id = fields[0]
-        card.workCode = work_codes
-
-    def add_task(self):
-        self.task_view.add(Task('', '', '', [''], [''], 0))
-
-    def delete_task(self, card: Card):
+    def delete(self, records_list, card: Card):
         self.task_view.delete(card.id)
-        self.root.ids.task_list.records_list.remove_widget(card)
+        records_list.remove_widget(card)
 
-    def update_task(self, card: Card):
+    def update(self, record_view: TableView, card: Card):
         fields = [widget.text for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
-        work_codes = [widget.text for widget in card.content.children if isinstance(widget, MDTextField)][::-1]
-        self.task_view.update(card.id, Task(*fields[:3], work_codes[::2], work_codes[1::2], *fields[3:]))
+        work_codes = []
+        if card.get_lists():
+            list_fields = [widget.text for widget in card.content.children if isinstance(widget, MDTextField)][::-1]
+            for i in range(len(card.get_lists())):
+                work_codes.append(list_fields[i::len(card.get_lists())])
+        limiter_pos = astuple(record_view.record_type()).index([])
+        record_view.database_view.update(card.id, record_view.record_type(*fields[:limiter_pos], *work_codes, *fields[limiter_pos:]))
         card.id = fields[0]
-        card.workCode = work_codes[::2]
-        card.workerCode = work_codes[1::2]
+        for i, field in enumerate(card.get_lists()):
+            field.clear()
+            field.extend(work_codes[i])
 
 
 # for tests
 if __name__ == '__main__':
-    application = KursApp(True)
+    application = KursApp(True, False)
     application.run()

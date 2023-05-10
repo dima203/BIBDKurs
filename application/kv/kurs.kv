@@ -75,6 +75,12 @@ MDScreenManager:
                     text: "Восстановление данных"
                     on_press: main_screen_manager.current = 'restore'
 
+                MDRectangleFlatButton:
+                    size_hint_x: 1
+                    pos_hint: {"center_x": 0.5}
+                    text: "Выход"
+                    on_press: app.exit()
+
     MDScreen:
         name: 'tables'
 
@@ -326,8 +332,8 @@ MDScreenManager:
             MDFloatLayout:
                 size_hint_y: 0.9
 
-                MDIconButton:
-                    text: "Open manager"
+                MDRectangleFlatIconButton:
+                    text: "Выбрать файл для восстановления"
                     icon: "folder"
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     on_release: app.file_manager_open()
