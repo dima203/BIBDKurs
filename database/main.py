@@ -2,9 +2,16 @@ import sqlite3
 
 
 class DataBase:
+    __instance = None
+
+    def __new__(cls, *args, **kwargs) -> 'DataBase':
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
+
     def __init__(self, debug=False) -> None:
         if debug:
-            self.__connection = sqlite3.connect('./debug.db')
+            self.__connection = sqlite3.connect(':memory:')
             original_base = sqlite3.connect('./database.db')
             original_base.backup(self.__connection)
             original_base.close()
@@ -54,6 +61,11 @@ class DataBase:
 
     def commit(self) -> None:
         self.__connection.commit()
+
+    def backup(self, path: str) -> None:
+        backup_connection = sqlite3.connect(path)
+        self.__connection.backup(backup_connection)
+        backup_connection.close()
 
     def __del__(self) -> None:
         self.__cursor.close()

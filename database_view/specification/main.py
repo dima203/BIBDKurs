@@ -1,16 +1,16 @@
 from database_view import BaseRecord, BaseDataBaseView
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 
 
 @dataclass()
 class Specification(BaseRecord):
-    specificationCode: str
-    contractCode: str
-    customerCode: str
-    sptCode: str
-    workCode: list[str]
-    cost: int
+    specificationCode: str = ''
+    contractCode: str = ''
+    customerCode: str = ''
+    sptCode: str = ''
+    workCode: list[str] = field(default_factory=list)
+    cost: int = 0
 
     def __eq__(self, other: 'Specification') -> bool:
         return (self.specificationCode == other.specificationCode

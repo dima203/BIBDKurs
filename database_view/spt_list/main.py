@@ -5,18 +5,10 @@ from dataclasses import dataclass
 
 @dataclass()
 class SPT(BaseRecord):
-    sptCode: str
-    sptName: str
-    sptIzm: str
-    sptPrice: int
-
-    def to_dict(self) -> dict:
-        return {
-            'sptCode': self.sptCode,
-            'sptName': self.sptName,
-            'sptIzm': self.sptIzm,
-            'sptPrice': self.sptPrice
-        }
+    sptCode: str = ''
+    sptName: str = ''
+    sptIzm: str = ''
+    sptPrice: int = 0
 
 
 class SPTList(BaseDataBaseView):

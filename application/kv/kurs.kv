@@ -4,6 +4,9 @@ MDScreenManager:
     MDScreen:
         name: 'auth'
 
+        Navigation:
+            title: "АРМ \"Начальника производственного цеха предприятия\""
+
         MDFloatLayout:
             orientation: 'vertical'
             size_hint_y: 0.9
@@ -13,7 +16,6 @@ MDScreenManager:
             MDBoxLayout:
                 orientation: 'vertical'
                 adaptive_height: True
-                min_height: 1
                 spacing: 10
                 size_hint: 0.5, None
                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
@@ -34,35 +36,41 @@ MDScreenManager:
                     on_press: app.auth(login.text, password.text)
                     pos_hint: {"center_x": 0.5}
 
-        Navigation:
-            title: "АРМ \"Начальника производственного цеха предприятия\""
-
     MDScreen:
         name: 'main'
 
-        MDBoxLayout:
-            orientation: 'vertical'
-            size_hint_y: 0.9
-            spacing: 20
-            padding: 20
-
-            MDRectangleFlatButton:
-                size_hint_x: 0.5
-                pos_hint: {"center_x": 0.5}
-                text: "Справочные документы"
-                on_press: main_screen_manager.current = 'tables'
-
-            MDRectangleFlatButton:
-                size_hint_x: 0.5
-                pos_hint: {"center_x": 0.5}
-                text: "Оперативные документы"
-                on_press: main_screen_manager.current = 'operation_tables'
-
         Navigation:
             title: "АРМ \"Начальника производственного цеха предприятия\""
 
+        MDFloatLayout:
+            size_hint_y: 0.9
+            padding: 20
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: 20
+                adaptive_height: True
+                adaptive_width: True
+                size_hint: None, None
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                MDRectangleFlatButton:
+                    size_hint_x: 1
+                    pos_hint: {"center_x": 0.5}
+                    text: "Справочные документы"
+                    on_press: main_screen_manager.current = 'tables'
+
+                MDRectangleFlatButton:
+                    size_hint_x: 1
+                    pos_hint: {"center_x": 0.5}
+                    text: "Оперативные документы"
+                    on_press: main_screen_manager.current = 'operation_tables'
+
     MDScreen:
         name: 'tables'
+
+        Navigation:
+            title: "Справочные документы"
 
         MDNavigationLayout:
             MDScreenManager:
@@ -71,44 +79,53 @@ MDScreenManager:
                 MDScreen:
                     name: 'table_choose'
 
-                    MDBoxLayout:
-                        orientation: 'vertical'
+                    MDFloatLayout:
                         size_hint_y: 0.9
-                        spacing: 20
                         padding: 20
 
-                        MDRectangleFlatButton:
-                            size_hint_x: 0.5
-                            pos_hint: {"center_x": 0.5}
-                            text: "Список клиентов СПТ"
-                            on_press: table_screen_manager.current = 'customer_view'
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            spacing: 20
+                            adaptive_height: True
+                            adaptive_width: True
+                            size_hint: None, None
+                            pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
-                        MDRectangleFlatButton:
-                            size_hint_x: 0.5
-                            pos_hint: {"center_x": 0.5}
-                            text: "Справочник работников цеха"
-                            on_press: table_screen_manager.current = 'worker_view'
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
+                                text: "Список клиентов СПТ"
+                                on_press: table_screen_manager.current = 'customer_view'
 
-                        MDRectangleFlatButton:
-                            size_hint_x: 0.5
-                            pos_hint: {"center_x": 0.5}
-                            text: "Каталог работ"
-                            on_press: table_screen_manager.current = 'work_view'
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
+                                text: "Справочник работников цеха"
+                                on_press: table_screen_manager.current = 'worker_view'
 
-                        MDRectangleFlatButton:
-                            size_hint_x: 0.5
-                            pos_hint: {"center_x": 0.5}
-                            text: "Справочник СПТ"
-                            on_press: table_screen_manager.current = 'spt_view'
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
+                                text: "Каталог работ"
+                                on_press: table_screen_manager.current = 'work_view'
 
-                        MDRectangleFlatButton:
-                            size_hint_x: 0.5
-                            pos_hint: {"center_x": 0.5}
-                            text: "Назад"
-                            on_press: main_screen_manager.current = 'main'
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
+                                text: "Справочник СПТ"
+                                on_press: table_screen_manager.current = 'spt_view'
+
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
+                                text: "Назад"
+                                on_press: main_screen_manager.current = 'main'
 
                 MDScreen:
                     name: 'customer_view'
+
+                    Navigation:
+                        title: "Список клиентов СПТ"
 
                     MDBoxLayout:
                         orientation: 'vertical'
@@ -120,18 +137,22 @@ MDScreenManager:
                             id: customer_list
 
                         MDBoxLayout:
-                            orientation: 'horizontal'
+                            orientation: 'vertical'
                             size_hint_y: 0.1
 
                             MDRectangleFlatButton:
                                 text: "Назад"
                                 size_hint_x: 0.2
+                                pos_hint: {"center_x": 0.5}
                                 on_press: table_screen_manager.current = 'table_choose'
                             MDLabel:
                                 size_hint_x: 0.8
 
                 MDScreen:
                     name: 'worker_view'
+
+                    Navigation:
+                        title: "Справочник работников цеха"
 
                     MDBoxLayout:
                         orientation: 'vertical'
@@ -148,12 +169,15 @@ MDScreenManager:
 
                             MDRectangleFlatButton:
                                 text: "Назад"
-                                size_hint_x: 0.5
+                                size_hint_x: 0.2
                                 pos_hint: {"center_x": 0.5}
                                 on_press: table_screen_manager.current = 'table_choose'
 
                 MDScreen:
                     name: 'work_view'
+
+                    Navigation:
+                        title: "Каталог работ"
 
                     MDBoxLayout:
                         orientation: 'vertical'
@@ -170,12 +194,15 @@ MDScreenManager:
 
                             MDRectangleFlatButton:
                                 text: "Назад"
-                                size_hint_x: 0.5
+                                size_hint_x: 0.2
                                 pos_hint: {"center_x": 0.5}
                                 on_press: table_screen_manager.current = 'table_choose'
 
                 MDScreen:
                     name: 'spt_view'
+
+                    Navigation:
+                        title: "Справочник СПТ"
 
                     MDBoxLayout:
                         orientation: 'vertical'
@@ -192,15 +219,15 @@ MDScreenManager:
 
                             MDRectangleFlatButton:
                                 text: "Назад"
-                                size_hint_x: 0.5
+                                size_hint_x: 0.2
                                 pos_hint: {"center_x": 0.5}
                                 on_press: table_screen_manager.current = 'table_choose'
 
-        Navigation:
-            title: "Справочные документы"
-
     MDScreen:
         name: 'operation_tables'
+
+        Navigation:
+            title: "Оперативные документы"
 
         MDNavigationLayout:
             MDScreenManager:
@@ -209,32 +236,41 @@ MDScreenManager:
                 MDScreen:
                     name: 'table_choose'
 
-                    MDBoxLayout:
-                        orientation: 'vertical'
+                    MDFloatLayout:
                         size_hint_y: 0.9
-                        spacing: 20
                         padding: 20
 
-                        MDRectangleFlatButton:
-                            size_hint_x: 0.5
-                            pos_hint: {"center_x": 0.5}
-                            text: "Спецификация на выполнение работ"
-                            on_press: operation_table_screen_manager.current = 'specification_view'
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            spacing: 20
+                            adaptive_height: True
+                            adaptive_width: True
+                            size_hint: None, None
+                            pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
-                        MDRectangleFlatButton:
-                            size_hint_x: 0.5
-                            pos_hint: {"center_x": 0.5}
-                            text: "Наряд-задание"
-                            on_press: operation_table_screen_manager.current = 'task_view'
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
+                                text: "Спецификация на выполнение работ"
+                                on_press: operation_table_screen_manager.current = 'specification_view'
 
-                        MDRectangleFlatButton:
-                            size_hint_x: 0.5
-                            pos_hint: {"center_x": 0.5}
-                            text: "Назад"
-                            on_press: main_screen_manager.current = 'main'
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
+                                text: "Наряд-задание"
+                                on_press: operation_table_screen_manager.current = 'task_view'
+
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
+                                text: "Назад"
+                                on_press: main_screen_manager.current = 'main'
 
                 MDScreen:
                     name: 'specification_view'
+
+                    Navigation:
+                        title: "Спецификация на выполнение работ"
 
                     MDBoxLayout:
                         orientation: 'vertical'
@@ -246,18 +282,20 @@ MDScreenManager:
                             id: specification_list
 
                         MDBoxLayout:
-                            orientation: 'horizontal'
+                            orientation: 'vertical'
                             size_hint_y: 0.1
 
                             MDRectangleFlatButton:
                                 text: "Назад"
                                 size_hint_x: 0.2
+                                pos_hint: {"center_x": 0.5}
                                 on_press: operation_table_screen_manager.current = 'table_choose'
-                            MDLabel:
-                                size_hint_x: 0.8
 
                 MDScreen:
                     name: 'task_view'
+
+                    Navigation:
+                        title: "Наряд-задание"
 
                     MDBoxLayout:
                         orientation: 'vertical'
@@ -269,18 +307,14 @@ MDScreenManager:
                             id: task_list
 
                         MDBoxLayout:
-                            orientation: 'horizontal'
+                            orientation: 'vertical'
                             size_hint_y: 0.1
 
                             MDRectangleFlatButton:
                                 text: "Назад"
                                 size_hint_x: 0.2
+                                pos_hint: {"center_x": 0.5}
                                 on_press: operation_table_screen_manager.current = 'table_choose'
-                            MDLabel:
-                                size_hint_x: 0.8
-
-        Navigation:
-            title: "Оперативные документы"
 
 
 <Navigation>:

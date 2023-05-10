@@ -2,7 +2,6 @@ from kivymd.app import MDApp
 from kivymd.uix.toolbar import MDTopAppBar
 from kivymd.uix.navigationdrawer import MDNavigationDrawer
 from kivymd.uix.gridlayout import MDGridLayout
-from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.card import MDCard
 from kivymd.uix.textfield import MDTextField
@@ -12,9 +11,13 @@ from kivy.properties import StringProperty, NumericProperty, ListProperty, Objec
 from kivy.animation import Animation
 
 import hashlib
+import datetime
+import os
+from dataclasses import astuple, asdict
 
 from database_view import CustomerList, Customer, Workers, Worker, WorksCatalog, Work, SPTList, SPT,\
-    SpecificationList, Specification, TaskList, Task
+    SpecificationList, Specification, TaskList, Task, BaseDataBaseView, BaseRecord
+from database import DataBase
 
 
 class Menu(MDNavigationDrawer):
@@ -26,56 +29,65 @@ class Navigation(MDTopAppBar):
 
 
 class Card(MDCard):
-    id = StringProperty()
+    id = StringProperty('')
+
+    def get_lists(self) -> tuple[list]:
+        return ()
 
 
 class CustomerCard(Card):
-    customerCode = StringProperty()
-    customerName = StringProperty()
-    customerLocation = StringProperty()
-    customerPhone = StringProperty()
+    customerCode = StringProperty('')
+    customerName = StringProperty('')
+    customerLocation = StringProperty('')
+    customerPhone = StringProperty('')
 
 
 class WorkerCard(Card):
-    workerCode = StringProperty()
-    workerFIO = StringProperty()
-    professionCode = StringProperty()
-    hireDate = StringProperty()
-    workerLocation = StringProperty()
-    workerPhone = StringProperty()
+    workerCode = StringProperty('')
+    workerFIO = StringProperty('')
+    professionCode = StringProperty('')
+    hireDate = StringProperty('')
+    workerLocation = StringProperty('')
+    workerPhone = StringProperty('')
 
 
 class WorkCard(Card):
-    workCode = StringProperty()
-    workPrice = NumericProperty()
-    workTime = NumericProperty()
+    workCode = StringProperty('')
+    workPrice = NumericProperty(0)
+    workTime = NumericProperty(0)
 
 
 class SPTCard(Card):
-    sptCode = StringProperty()
-    sptName = StringProperty()
-    sptIzm = StringProperty()
-    sptPrice = NumericProperty()
+    sptCode = StringProperty('')
+    sptName = StringProperty('')
+    sptIzm = StringProperty('')
+    sptPrice = NumericProperty(0)
 
 
 class SpecificationCard(Card):
-    specificationCode = StringProperty()
-    contractCode = StringProperty()
-    customerCode = StringProperty()
-    sptCode = StringProperty()
-    workCode = ListProperty()
+    specificationCode = StringProperty('')
+    contractCode = StringProperty('')
+    customerCode = StringProperty('')
+    sptCode = StringProperty('')
+    workCode = ListProperty([])
     content = ObjectProperty()
-    cost = NumericProperty()
+    cost = NumericProperty(0)
+
+    def get_lists(self) -> tuple[list]:
+        return self.workCode,
 
 
 class TaskCard(Card):
-    taskCode = StringProperty()
-    contractCode = StringProperty()
-    taskDate = StringProperty()
-    workCode = ListProperty()
-    workerCode = ListProperty()
+    taskCode = StringProperty('')
+    contractCode = StringProperty('')
+    taskDate = StringProperty('')
+    workCode = ListProperty([])
+    workerCode = ListProperty([])
     content = ObjectProperty()
-    taskCost = NumericProperty()
+    taskCost = NumericProperty(0)
+
+    def get_lists(self) -> tuple[list]:
+        return self.workCode, self.workerCode
 
 
 class AddButton(MDRectangleFlatButton):
@@ -111,215 +123,82 @@ class DeleteWorkCodeButton(MDIconButton):
         self.callback(self.card, self.work_code)
 
 
-class CustomerView(MDScrollView):
+class TableView(MDScrollView):
+    database_view: BaseDataBaseView
+    record_card_type: type[Card]
+    record_type: type[BaseRecord]
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.customers: list = MDApp.get_running_app().customer_view.get_table()
-        self.customer_list = MDGridLayout(cols=1, spacing=10, size_hint_y=None, padding=20)
-        self.customer_list.bind(minimum_height=self.customer_list.setter('height'))
+        self.records: list = self.database_view.get_table()
+        self.records_list = MDGridLayout(cols=1, spacing=10, size_hint_y=None, padding=20)
+        self.records_list.bind(minimum_height=self.records_list.setter('height'))
         self.add_button = AddButton(self.add, text='Добавить')
 
-        for customer in self.customers:
-            card = CustomerCard(
-                id=f'{customer.customerCode}',
-                customerCode=customer.customerCode,
-                customerName=customer.customerName,
-                customerLocation=customer.customerLocation,
-                customerPhone=customer.customerPhone,
-                size_hint_y=None,
-                height=100
-            )
-            self.customer_list.add_widget(card)
-        self.customer_list.add_widget(self.add_button)
+        for record in self.records:
+            self._add_card(record)
+        self.records_list.add_widget(self.add_button)
 
-        self.add_widget(self.customer_list)
+        self.add_widget(self.records_list)
 
     def add(self) -> None:
-        MDApp.get_running_app().add_customer()
-        self.customer_list.remove_widget(self.add_button)
-        card = CustomerCard(
-            id=f'',
-            customerCode='',
-            customerName='',
-            customerLocation='',
-            customerPhone='',
+        record = self.record_type()
+        MDApp.get_running_app().add(self.database_view, record)
+        self.records_list.remove_widget(self.add_button)
+        self._add_card(record)
+        self.records_list.add_widget(self.add_button)
+
+    def _add_card(self, record: BaseRecord) -> None:
+        card = self.record_card_type(
+            id=f'{astuple(record)[0]}',
+            **asdict(record),
             size_hint_y=None,
             height=100
         )
-        self.customer_list.add_widget(card)
-        self.customer_list.add_widget(self.add_button)
+        self.records_list.add_widget(card)
 
 
-class WorkerView(MDScrollView):
-    def __init__(self, **kwargs):
+class OperationsTableView(TableView):
+    inside_list_cols: int
+
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
-        self.workers: list = MDApp.get_running_app().worker_view.get_table()
-        self.worker_list = MDGridLayout(cols=1, spacing=10, size_hint_y=None, padding=20)
-        self.worker_list.bind(minimum_height=self.worker_list.setter('height'))
-        self.add_button = AddButton(self.add, text='Добавить')
-
-        for worker in self.workers:
-            card = WorkerCard(
-                id=f'{worker.workerCode}',
-                workerCode=worker.workerCode,
-                workerFIO=worker.workerFIO,
-                professionCode=worker.professionCode,
-                hireDate=worker.hireDate,
-                workerLocation=worker.workerLocation,
-                workerPhone=worker.workerPhone,
+    def _add_card(self, record: BaseRecord) -> None:
+        card = self.record_card_type(
+            id=f'{astuple(record)[0]}',
+            **asdict(record),
+            content=MDGridLayout(
                 size_hint_y=None,
-                height=100
-            )
-            self.worker_list.add_widget(card)
-        self.worker_list.add_widget(self.add_button)
-
-        self.add_widget(self.worker_list)
-
-    def add(self) -> None:
-        MDApp.get_running_app().add_worker()
-        self.worker_list.remove_widget(self.add_button)
-        card = WorkerCard(
-            id=f'',
-            workerCode='',
-            workerFIO='',
-            professionCode='',
-            hireDate='',
-            workerLocation='',
-            workerPhone='',
+                adaptive_height=True,
+                cols=self.inside_list_cols + 1,
+            ),
             size_hint_y=None,
             height=100
         )
-        self.worker_list.add_widget(card)
-        self.worker_list.add_widget(self.add_button)
+        self.records_list.add_widget(card)
 
-
-class WorkView(MDScrollView):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        self.works: list = MDApp.get_running_app().work_view.get_table()
-        self.work_list = MDGridLayout(cols=1, spacing=10, size_hint_y=None, padding=20)
-        self.work_list.bind(minimum_height=self.work_list.setter('height'))
-        self.add_button = AddButton(self.add, text='Добавить')
-
-        for work in self.works:
-            card = WorkCard(
-                id=f'{work.workCode}',
-                workCode=work.workCode,
-                workPrice=work.workPrice,
-                workTime=work.workTime,
-                size_hint_y=None,
-                height=100
+        card.ids.panel_layout.add_widget(MDExpansionPanel(
+            icon="plus",
+            content=card.content,
+            panel_cls=MDExpansionPanelOneLine(
+                text="Список работ",
+                on_release=(lambda _: self._update_fields(card))
             )
-            self.work_list.add_widget(card)
-        self.work_list.add_widget(self.add_button)
+        ))
 
-        self.add_widget(self.work_list)
+        self._update_fields(card)
 
-    def add(self) -> None:
-        MDApp.get_running_app().add_work()
-        self.work_list.remove_widget(self.add_button)
-        card = WorkCard(
-            id=f'',
-            workCode='',
-            workPrice='0',
-            workTime='0',
-            size_hint_y=None,
-            height=100
-        )
-        self.work_list.add_widget(card)
-        self.work_list.add_widget(self.add_button)
-
-
-class SPTView(MDScrollView):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        self.spts: list = MDApp.get_running_app().spt_view.get_table()
-        self.spt_list = MDGridLayout(cols=1, spacing=10, size_hint_y=None, padding=20)
-        self.spt_list.bind(minimum_height=self.spt_list.setter('height'))
-        self.add_button = AddButton(self.add, text='Добавить')
-
-        for spt in self.spts:
-            card = SPTCard(
-                id=f'{spt.sptCode}',
-                sptCode=spt.sptCode,
-                sptName=spt.sptName,
-                sptIzm=spt.sptIzm,
-                sptPrice=spt.sptPrice,
-                size_hint_y=None,
-                height=100
-            )
-            self.spt_list.add_widget(card)
-        self.spt_list.add_widget(self.add_button)
-
-        self.add_widget(self.spt_list)
-
-    def add(self) -> None:
-        MDApp.get_running_app().add_spt()
-        self.spt_list.remove_widget(self.add_button)
-        card = SPTCard(
-            id=f'',
-            sptCode='',
-            sptName='',
-            sptIzm='',
-            sptPrice='0',
-            size_hint_y=None,
-            height=100
-        )
-        self.spt_list.add_widget(card)
-        self.spt_list.add_widget(self.add_button)
-
-
-class SpecificationView(MDScrollView):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        self.specifications: list = MDApp.get_running_app().specification_view.get_table()
-        self.specification_list = MDGridLayout(cols=1, spacing=10, size_hint_y=None, padding=20)
-        self.specification_list.bind(minimum_height=self.specification_list.setter('height'))
-        self.add_button = AddButton(self.add, text='Добавить')
-
-        for specification in self.specifications:
-            card = SpecificationCard(
-                id=f'{specification.specificationCode}',
-                specificationCode=specification.specificationCode,
-                contractCode=specification.contractCode,
-                customerCode=specification.customerCode,
-                sptCode=specification.sptCode,
-                workCode=specification.workCode,
-                content=MDGridLayout(
-                    size_hint_y=None,
-                    adaptive_height=True,
-                    cols=2,
-                ),
-                cost=specification.cost,
-                size_hint_y=None,
-            )
-
-            card.ids.panel_layout.add_widget(MDExpansionPanel(
-                icon="plus",
-                content=card.content,
-                panel_cls=MDExpansionPanelOneLine(
-                    text="Список работ",
-                    on_release=(lambda _: self.update_specification_fields(card))
-                )
-            ))
-            self.update_specification_fields(card)
-            self.specification_list.add_widget(card)
-        self.specification_list.add_widget(self.add_button)
-
-        self.add_widget(self.specification_list)
-
-    def update_specification_fields(self, card: SpecificationCard):
+    def _update_fields(self, card: Card):
         card.content.clear_widgets()
 
-        for workCode in card.workCode:
-            card.content.add_widget(MDTextField(text=workCode))
-            card.content.add_widget(DeleteWorkCodeButton(self.delete_work_code, card, workCode))
-        card.content.add_widget(ListAddButton(self.add_work_code, card, text='Добавить'))
+        for fields in zip(*[field for field in card.get_lists() if isinstance(field, list)]):
+            for field in fields:
+                card.content.add_widget(MDTextField(text=field))
+            card.content.add_widget(DeleteWorkCodeButton(self._delete_inside_list_record, card, fields[0]))
+
+        card.content.add_widget(ListAddButton(self._add_inside_list_record, card, text='Добавить'))
         if card.ids.panel_layout.children[0].get_state() == 'open':
             animation = Animation(
                 height=card.content.height + card.ids.panel_layout.children[0].height,
@@ -335,168 +214,81 @@ class SpecificationView(MDScrollView):
             )
         animation.start(card)
 
-    def add_work_code(self, card: SpecificationCard):
-        card.workCode.append('')
+    def _add_inside_list_record(self, card: Card):
+        for field in card.get_lists():
+            field.append('')
         card.ids.panel_layout.children[0].close_panel(card.ids.panel_layout.children[0], True)
         card.ids.panel_layout.children[0].remove_widget(card.content)
-        self.update_specification_fields(card)
+        self._update_fields(card)
 
-    def delete_work_code(self, card: SpecificationCard, work_code: str):
-        card.workCode.remove(work_code)
+    def _delete_inside_list_record(self, card: Card, code: str):
+        index = 0
+        for i, codes in enumerate(card.get_lists()[0]):
+            if codes == code:
+                index = i
+                break
+
+        for field in card.get_lists():
+            field.pop(index)
         card.ids.panel_layout.children[0].close_panel(card.ids.panel_layout.children[0], True)
         card.ids.panel_layout.children[0].remove_widget(card.content)
-        self.update_specification_fields(card)
-
-    def add(self) -> None:
-        MDApp.get_running_app().add_specification()
-        self.specification_list.remove_widget(self.add_button)
-        card = SpecificationCard(
-            id=f'',
-            specificationCode='',
-            contractCode='',
-            customerCode='',
-            sptCode='',
-            workCode=[],
-            content=MDGridLayout(
-                size_hint_y=None,
-                adaptive_height=True,
-                cols=2,
-            ),
-            cost=0,
-            size_hint_y=None,
-        )
-
-        card.ids.panel_layout.add_widget(MDExpansionPanel(
-            icon="plus",
-            content=card.content,
-            panel_cls=MDExpansionPanelOneLine(
-                text="Список работ",
-                on_release=(lambda _: self.update_specification_fields(card))
-            )
-        ))
-
-        self.update_specification_fields(card)
-        self.specification_list.add_widget(card)
-        self.specification_list.add_widget(self.add_button)
+        self._update_fields(card)
 
 
-class TaskView(MDScrollView):
+class CustomerView(TableView):
     def __init__(self, **kwargs):
+        self.database_view = MDApp.get_running_app().customer_view
+        self.record_card_type = CustomerCard
+        self.record_type = Customer
         super().__init__(**kwargs)
 
-        self.tasks: list = MDApp.get_running_app().task_view.get_table()
-        self.task_list = MDGridLayout(cols=1, spacing=10, size_hint_y=None, padding=20)
-        self.task_list.bind(minimum_height=self.task_list.setter('height'))
-        self.add_button = AddButton(self.add, text='Добавить')
 
-        for task in self.tasks:
-            card = TaskCard(
-                id=f'{task.taskCode}',
-                taskCode=task.taskCode,
-                contractCode=task.contractCode,
-                taskDate=task.taskDate,
-                workCode=task.workCode,
-                workerCode=task.workerCode,
-                content=MDGridLayout(
-                    spacing=10,
-                    size_hint_y=None,
-                    adaptive_height=True,
-                    cols=3
-                ),
-                taskCost=task.taskCost,
-                size_hint_y=None,
-            )
+class WorkerView(TableView):
+    def __init__(self, **kwargs):
+        self.database_view = MDApp.get_running_app().worker_view
+        self.record_card_type = WorkerCard
+        self.record_type = Worker
+        super().__init__(**kwargs)
 
-            card.ids.panel_layout.add_widget(MDExpansionPanel(
-                icon="plus",
-                content=card.content,
-                panel_cls=MDExpansionPanelOneLine(
-                    text="Список работ",
-                    on_release=(lambda _: self.update_task_fields(card))
-                )
-            ))
-            self.update_task_fields(card)
-            self.task_list.add_widget(card)
-        self.task_list.add_widget(self.add_button)
 
-        self.add_widget(self.task_list)
+class WorkView(TableView):
+    def __init__(self, **kwargs):
+        self.database_view = MDApp.get_running_app().work_view
+        self.record_card_type = WorkCard
+        self.record_type = Work
+        super().__init__(**kwargs)
 
-    def update_task_fields(self, card: TaskCard):
-        card.content.clear_widgets()
 
-        for i in range(len(card.workCode)):
-            card.content.add_widget(MDTextField(text=card.workCode[i]))
-            card.content.add_widget(MDTextField(text=card.workerCode[i]))
-            card.content.add_widget(DeleteWorkCodeButton(self.delete_work_code, card, card.workCode[i]))
-        card.content.add_widget(ListAddButton(self.add_work_worker_code, card, text='Добавить'))
-        if card.ids.panel_layout.children[0].get_state() == 'open':
-            animation = Animation(
-                height=card.content.height + card.ids.panel_layout.children[0].height,
-                d=card.ids.panel_layout.children[0].opening_time,
-                t=card.ids.panel_layout.children[0].opening_transition
-            )
+class SPTView(TableView):
+    def __init__(self, **kwargs):
+        self.database_view = MDApp.get_running_app().spt_view
+        self.record_card_type = SPTCard
+        self.record_type = SPT
+        super().__init__(**kwargs)
 
-        else:
-            animation = Animation(
-                height=100,
-                d=card.ids.panel_layout.children[0].closing_time,
-                t=card.ids.panel_layout.children[0].closing_transition
-            )
-        animation.start(card)
 
-    def add_work_worker_code(self, card: TaskCard):
-        card.workCode.append('')
-        card.workerCode.append('')
-        card.ids.panel_layout.children[0].close_panel(card.ids.panel_layout.children[0], True)
-        card.ids.panel_layout.children[0].remove_widget(card.content)
-        self.update_task_fields(card)
-        card.ids.panel_layout.children[0].open_panel()
+class SpecificationView(OperationsTableView):
+    def __init__(self, **kwargs):
+        self.database_view = MDApp.get_running_app().specification_view
+        self.record_card_type = SpecificationCard
+        self.record_type = Specification
+        self.inside_list_cols = 1
+        super().__init__(**kwargs)
 
-    def delete_work_code(self, card: TaskCard, work_code: str):
-        index = card.workCode.index(work_code)
-        card.workCode.pop(index)
-        card.workerCode.pop(index)
-        card.ids.panel_layout.children[0].close_panel(card.ids.panel_layout.children[0], True)
-        card.ids.panel_layout.children[0].remove_widget(card.content)
-        self.update_task_fields(card)
-        card.ids.panel_layout.children[0].open_panel()
 
-    def add(self) -> None:
-        MDApp.get_running_app().add_task()
-        self.task_list.remove_widget(self.add_button)
-        card = TaskCard(
-            id=f'',
-            taskCode='',
-            contractCode='',
-            taskDate='',
-            workCode=[],
-            workerCode=[],
-            content=MDGridLayout(
-                spacing=10,
-                size_hint_y=None,
-                adaptive_height=True,
-                cols=3
-            ),
-            taskCost=0,
-            size_hint_y=None,
-        )
-        card.ids.panel_layout.add_widget(MDExpansionPanel(
-            icon="plus",
-            content=card.content,
-            panel_cls=MDExpansionPanelOneLine(
-                text="Список работ",
-                on_release=(lambda _: self.update_task_fields(card))
-            )
-        ))
-        self.update_task_fields(card)
-        self.task_list.add_widget(card)
-        self.task_list.add_widget(self.add_button)
+class TaskView(OperationsTableView):
+    def __init__(self, **kwargs):
+        self.database_view = MDApp.get_running_app().task_view
+        self.record_card_type = TaskCard
+        self.record_type = Task
+        self.inside_list_cols = 2
+        super().__init__(**kwargs)
 
 
 class KursApp(MDApp):
     kv_directory = './kv'
 
-    def __init__(self, debug=False, **kwargs) -> None:
+    def __init__(self, debug=False, backup=True, **kwargs) -> None:
         super().__init__(**kwargs)
 
         self.theme_cls.theme_style = 'Light'
@@ -505,6 +297,9 @@ class KursApp(MDApp):
         self.theme_cls.accent_hue = '900'
         self.error_color = "#FF0000"
         self.save_color = '#00FF00'
+
+        self.debug = debug
+        self.backup = backup
 
         self.customer_view = CustomerList(debug)
         self.worker_view = Workers(debug)
@@ -520,48 +315,46 @@ class KursApp(MDApp):
         if login == 'admin' and m.hexdigest() == '0ffe1abd1a08215353c233d6e009613e95eec4253832a761af28ff37ac5a150c':
             self.root.current = 'main'
 
-    def add_customer(self):
-        self.customer_view.add(Customer('', '', '', ''))
+        if not self.backup:
+            return
+
+        current_datetime = datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
+        if not os.path.exists(rf'backup/{current_datetime}.db'):
+            DataBase(self.debug).backup(rf'backup/{current_datetime}.db')
+
+    def add(self, table_view: BaseDataBaseView, record: BaseRecord):
+        table_view.add(record)
 
     def delete_customer(self, card: Card):
         self.customer_view.delete(card.id)
-        self.root.ids.customer_list.customer_list.remove_widget(card)
+        self.root.ids.customer_list.records_list.remove_widget(card)
 
     def update_customer(self, card: CustomerCard):
         fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
         self.customer_view.update(card.id, Customer(*[field.text for field in fields]))
         card.id = fields[0].text
 
-    def add_worker(self):
-        self.worker_view.add(Worker('', '', '', '', '', ''))
-
     def delete_worker(self, card: Card):
         self.worker_view.delete(card.id)
-        self.root.ids.worker_list.worker_list.remove_widget(card)
+        self.root.ids.worker_list.records_list.remove_widget(card)
 
     def update_worker(self, card: WorkerCard):
         fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
         self.worker_view.update(card.id, Worker(*[field.text for field in fields]))
         card.id = fields[0].text
 
-    def add_work(self):
-        self.work_view.add(Work('', 0, 0))
-
     def delete_work(self, card: Card):
         self.work_view.delete(card.id)
-        self.root.ids.work_list.work_list.remove_widget(card)
+        self.root.ids.work_list.records_list.remove_widget(card)
 
     def update_work(self, card: WorkerCard):
         fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
         self.work_view.update(card.id, Work(*[field.text for field in fields]))
         card.id = fields[0].text
 
-    def add_spt(self):
-        self.spt_view.add(SPT('', '', '', 0))
-
     def delete_spt(self, card: Card):
         self.spt_view.delete(card.id)
-        self.root.ids.spt_list.spt_list.remove_widget(card)
+        self.root.ids.spt_list.records_list.remove_widget(card)
 
     def update_spt(self, card: WorkerCard):
         fields = [widget for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
@@ -573,7 +366,7 @@ class KursApp(MDApp):
 
     def delete_specification(self, card: Card):
         self.specification_view.delete(card.id)
-        self.root.ids.specification_list.specification_list.remove_widget(card)
+        self.root.ids.specification_list.records_list.remove_widget(card)
 
     def update_specification(self, card: SpecificationCard):
         fields = [widget.text for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
@@ -587,7 +380,7 @@ class KursApp(MDApp):
 
     def delete_task(self, card: Card):
         self.task_view.delete(card.id)
-        self.root.ids.task_list.task_list.remove_widget(card)
+        self.root.ids.task_list.records_list.remove_widget(card)
 
     def update_task(self, card: TaskCard):
         fields = [widget.text for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
@@ -600,5 +393,5 @@ class KursApp(MDApp):
 
 # for tests
 if __name__ == '__main__':
-    application = KursApp(True)
+    application = KursApp(True, False)
     application.run()

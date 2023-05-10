@@ -1,16 +1,16 @@
 from database_view import BaseRecord, BaseDataBaseView
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 
 
 @dataclass()
 class Task(BaseRecord):
-    taskCode: str
-    contractCode: str
-    taskDate: str
-    workCode: list[str]
-    workerCode: list[str]
-    taskCost: int
+    taskCode: str = ''
+    contractCode: str = ''
+    taskDate: str = ''
+    workCode: list[str] = field(default_factory=list)
+    workerCode: list[str] = field(default_factory=list)
+    taskCost: int = 0
 
     def __eq__(self, other: 'Task') -> bool:
         return (self.taskCode == other.taskCode

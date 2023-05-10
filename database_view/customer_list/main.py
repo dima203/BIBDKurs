@@ -5,18 +5,10 @@ from dataclasses import dataclass
 
 @dataclass()
 class Customer(BaseRecord):
-    customerCode: str
-    customerName: str
-    customerLocation: str
-    customerPhone: str
-
-    def to_dict(self) -> dict:
-        return {
-            'customerCode': self.customerCode,
-            'customerName': self.customerName,
-            'customerLocation': self.customerLocation,
-            'customerPhone': self.customerPhone
-        }
+    customerCode: str = ''
+    customerName: str = ''
+    customerLocation: str = ''
+    customerPhone: str = ''
 
 
 class CustomerList(BaseDataBaseView):

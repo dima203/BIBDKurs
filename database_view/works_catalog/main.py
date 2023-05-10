@@ -5,16 +5,9 @@ from dataclasses import dataclass
 
 @dataclass()
 class Work(BaseRecord):
-    workCode: str
-    workPrice: int
-    workTime: float
-
-    def to_dict(self) -> dict:
-        return {
-            'workCode': self.workCode,
-            'workPrice': self.workPrice,
-            'workTime': self.workTime
-        }
+    workCode: str = ''
+    workPrice: int = 0
+    workTime: float = 0
 
 
 class WorksCatalog(BaseDataBaseView):
