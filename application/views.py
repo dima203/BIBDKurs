@@ -10,8 +10,8 @@ from kivymd.toast import toast
 from dataclasses import astuple, asdict
 from sqlite3 import IntegrityError
 
-from database_view import BaseDataBaseView, BaseRecord, Customer, Worker, Work, SPT, Specification, Task
-from cards import Card, CustomerCard, WorkerCard, WorkCard, SPTCard, SpecificationCard, TaskCard
+from database_view import BaseDataBaseView, BaseRecord, Customer, Worker, Work, SPT, Specification, Task, ReportCustomer
+from cards import Card, CustomerCard, WorkerCard, WorkCard, SPTCard, SpecificationCard, TaskCard, CustomerReportCard
 
 
 class AddButton(MDRectangleFlatButton):
@@ -58,13 +58,34 @@ class TableView(MDScrollView):
         self.records: list = self.database_view.get_table()
         self.records_list = MDGridLayout(cols=1, spacing=10, size_hint_y=None, padding=20)
         self.records_list.bind(minimum_height=self.records_list.setter('height'))
-        self.add_button = AddButton(self.add, text='Добавить')
 
         for record in self.records:
             self._add_card(record)
-        self.records_list.add_widget(self.add_button)
 
         self.add_widget(self.records_list)
+
+    def refresh(self) -> None:
+        self.records = self.database_view.get_table()
+        self.records_list.clear_widgets()
+        for record in self.records:
+            self._add_card(record)
+
+    def _add_card(self, record: BaseRecord) -> None:
+        card = self.record_card_type(
+            id=f'{astuple(record)[0]}',
+            **asdict(record),
+            size_hint_y=None,
+            height=100
+        )
+        self.records_list.add_widget(card)
+
+
+class ListTableView(TableView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.add_button = AddButton(self.add, text='Добавить')
+        self.records_list.add_widget(self.add_button)
 
     def add(self) -> None:
         record = self.record_type()
@@ -77,23 +98,11 @@ class TableView(MDScrollView):
             toast('Сначала сохраните созданную запись')
 
     def refresh(self) -> None:
-        self.records = self.database_view.get_table()
-        self.records_list.clear_widgets()
-        for record in self.records:
-            self._add_card(record)
+        super().refresh()
         self.records_list.add_widget(self.add_button)
 
-    def _add_card(self, record: BaseRecord) -> None:
-        card = self.record_card_type(
-            id=f'{astuple(record)[0]}',
-            **asdict(record),
-            size_hint_y=None,
-            height=100
-        )
-        self.records_list.add_widget(card)
 
-
-class OperationsTableView(TableView):
+class OperationsTableView(ListTableView):
     inside_list_cols: int
 
     def _add_card(self, record: BaseRecord) -> None:
@@ -103,6 +112,7 @@ class OperationsTableView(TableView):
             content=MDGridLayout(
                 size_hint_y=None,
                 adaptive_height=True,
+                spacing=10,
                 cols=self.inside_list_cols + 1,
             ),
             size_hint_y=None,
@@ -127,7 +137,11 @@ class OperationsTableView(TableView):
         for fields in zip(*[field for field in card.get_lists() if isinstance(field, list)]):
             for field in fields:
                 card.content.add_widget(MDTextField(text=field))
-            card.content.add_widget(DeleteWorkCodeButton(self._delete_inside_list_record, card, fields[0]))
+            card.content.add_widget(DeleteWorkCodeButton(
+                self._delete_inside_list_record, card, fields[0],
+                size_hint_x=None,
+                width=50,
+            ))
 
         card.content.add_widget(ListAddButton(self._add_inside_list_record, card, text='Добавить'))
         if card.ids.panel_layout.children[0].get_state() == 'open':
@@ -166,7 +180,7 @@ class OperationsTableView(TableView):
         self._update_fields(card)
 
 
-class CustomerView(TableView):
+class CustomerView(ListTableView):
     def __init__(self, **kwargs):
         self.database_view = MDApp.get_running_app().customer_view
         self.record_card_type = CustomerCard
@@ -174,7 +188,7 @@ class CustomerView(TableView):
         super().__init__(**kwargs)
 
 
-class WorkerView(TableView):
+class WorkerView(ListTableView):
     def __init__(self, **kwargs):
         self.database_view = MDApp.get_running_app().worker_view
         self.record_card_type = WorkerCard
@@ -182,7 +196,7 @@ class WorkerView(TableView):
         super().__init__(**kwargs)
 
 
-class WorkView(TableView):
+class WorkView(ListTableView):
     def __init__(self, **kwargs):
         self.database_view = MDApp.get_running_app().work_view
         self.record_card_type = WorkCard
@@ -190,7 +204,7 @@ class WorkView(TableView):
         super().__init__(**kwargs)
 
 
-class SPTView(TableView):
+class SPTView(ListTableView):
     def __init__(self, **kwargs):
         self.database_view = MDApp.get_running_app().spt_view
         self.record_card_type = SPTCard
@@ -213,4 +227,12 @@ class TaskView(OperationsTableView):
         self.record_card_type = TaskCard
         self.record_type = Task
         self.inside_list_cols = 2
+        super().__init__(**kwargs)
+
+
+class CustomerReportView(TableView):
+    def __init__(self, **kwargs):
+        self.database_view = MDApp.get_running_app().customer_report_view
+        self.record_card_type = CustomerReportCard
+        self.record_type = ReportCustomer
         super().__init__(**kwargs)

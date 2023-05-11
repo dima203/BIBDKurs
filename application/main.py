@@ -17,12 +17,11 @@ import os
 import pathlib
 from dataclasses import astuple
 from time import sleep
-from sqlite3 import IntegrityError
 
-from views import TableView, CustomerView, WorkerView, WorkView, SPTView, SpecificationView, TaskView
+from views import ListTableView, CustomerView, WorkerView, WorkView, SPTView, SpecificationView, TaskView
 from cards import Card
 from database_view import CustomerList, Workers, WorksCatalog, SPTList,\
-    SpecificationList, TaskList, BaseDataBaseView, BaseRecord
+    SpecificationList, TaskList, BaseDataBaseView, BaseRecord, CustomerReport
 from database import DataBase
 
 
@@ -63,6 +62,8 @@ class KursApp(MDApp):
 
         self.specification_view = SpecificationList(debug)
         self.task_view = TaskList(debug)
+
+        self.customer_report_view = CustomerReport(self.task_view, self.specification_view, debug)
 
         self.is_manager_open = False
         self.file_manager = MDFileManager(
@@ -152,13 +153,12 @@ class KursApp(MDApp):
     def add(self, table_view: BaseDataBaseView, record: BaseRecord):
         table_view.add(record)
 
-
     def delete(self, records_list, card: Card):
         self.task_view.delete(card.id)
         records_list.remove_widget(card)
 
-    def update(self, record_view: TableView, card: Card):
-        fields = [widget.text for widget in card.children[0].children[0].children if isinstance(widget, MDTextField)][::-1]
+    def update(self, record_view: ListTableView, card: Card):
+        fields = [widget.text for widget in card.children[0].children if isinstance(widget, MDTextField)][::-1]
         work_codes = []
         if card.get_lists():
             list_fields = [widget.text for widget in card.content.children if isinstance(widget, MDTextField)][::-1]

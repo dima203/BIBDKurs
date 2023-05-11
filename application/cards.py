@@ -62,3 +62,9 @@ class TaskCard(Card):
 
     def get_lists(self) -> tuple[list]:
         return self.workCode, self.workerCode
+
+
+class CustomerReportCard(Card):
+    customerCode = StringProperty('')
+    contractNumber = NumericProperty(0)
+    contractPrice = NumericProperty(0)

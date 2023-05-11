@@ -72,6 +72,12 @@ MDScreenManager:
                 MDRectangleFlatButton:
                     size_hint_x: 1
                     pos_hint: {"center_x": 0.5}
+                    text: "Отчетные документы"
+                    on_press: main_screen_manager.current = 'report_tables'
+
+                MDRectangleFlatButton:
+                    size_hint_x: 1
+                    pos_hint: {"center_x": 0.5}
                     text: "Восстановление данных"
                     on_press: main_screen_manager.current = 'restore'
 
@@ -148,6 +154,39 @@ MDScreenManager:
                         spacing: 20
                         padding: 20
 
+                        MDBoxLayout:
+                            padding: 20
+                            size_hint_y: None
+                            height: 140
+
+                            MDCard:
+                                size_hint_y: None
+                                height: 100
+
+                                MDGridLayout:
+                                    height: 100
+                                    size_hint_y: None
+                                    cols: 5
+                                    rows: 1
+                                    spacing: 10
+
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер клиента"
+                                    MDLabel:
+                                        text: "Наименование"
+                                    MDLabel:
+                                        text: "Адрес клиента"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер телефона клиента"
+                                    MDLabel:
+                                        width: 50
+                                        size_hint_x: None
+                                        text: ""
+
                         CustomerView:
                             id: customer_list
 
@@ -170,6 +209,47 @@ MDScreenManager:
                         size_hint_y: 0.9
                         spacing: 20
                         padding: 20
+
+                        MDBoxLayout:
+                            padding: 20
+                            size_hint_y: None
+                            height: 140
+
+                            MDCard:
+                                size_hint_y: None
+                                height: 100
+
+                                MDGridLayout:
+                                    height: 100
+                                    size_hint_y: None
+                                    cols: 7
+                                    rows: 1
+                                    spacing: 10
+
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Учетный номер работника"
+                                    MDLabel:
+                                        text: "ФИО работника"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Код профессии"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Дата приема на работу"
+                                    MDLabel:
+                                        text: "Адрес"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер телефона"
+                                    MDLabel:
+                                        width: 50
+                                        size_hint_x: None
+                                        text: ""
 
                         WorkerView:
                             id: worker_list
@@ -194,6 +274,35 @@ MDScreenManager:
                         spacing: 20
                         padding: 20
 
+                        MDBoxLayout:
+                            padding: 20
+                            size_hint_y: None
+                            height: 140
+
+                            MDCard:
+                                size_hint_y: None
+                                height: 100
+
+                                MDGridLayout:
+                                    height: 100
+                                    size_hint_y: None
+                                    cols: 4
+                                    rows: 1
+                                    spacing: 10
+
+                                    MDLabel:
+                                        text: "Код работы"
+                                    MDLabel:
+                                        text: "Стоимость работы в рублях"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Время выполнения работы в часах"
+                                    MDLabel:
+                                        width: 50
+                                        size_hint_x: None
+                                        text: ""
+
                         WorkView:
                             id: work_list
 
@@ -216,6 +325,41 @@ MDScreenManager:
                         size_hint_y: 0.9
                         spacing: 20
                         padding: 20
+
+                        MDBoxLayout:
+                            padding: 20
+                            size_hint_y: None
+                            height: 140
+
+                            MDCard:
+                                size_hint_y: None
+                                height: 100
+
+                                MDGridLayout:
+                                    height: 100
+                                    size_hint_y: None
+                                    cols: 5
+                                    rows: 1
+                                    spacing: 10
+
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер СПТ"
+                                    MDLabel:
+                                        text: "Название СПТ"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Единицы измерения"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Стоимость в рублях"
+                                    MDLabel:
+                                        width: 50
+                                        size_hint_x: None
+                                        text: ""
 
                         SPTView:
                             id: spt_list
@@ -283,6 +427,49 @@ MDScreenManager:
                         spacing: 20
                         padding: 20
 
+                        MDBoxLayout:
+                            padding: 20
+                            size_hint_y: None
+                            height: 140
+
+                            MDCard:
+                                size_hint_y: None
+                                height: 100
+
+                                MDGridLayout:
+                                    height: 100
+                                    size_hint_y: None
+                                    cols: 7
+                                    rows: 1
+                                    spacing: 10
+
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер спецификации"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер договора"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер клиента"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер СПТ"
+                                    MDLabel:
+                                        text: "Номер работы"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Общая стоимость работ в рублях"
+                                    MDLabel:
+                                        width: 50
+                                        size_hint_x: None
+                                        text: ""
+
                         SpecificationView:
                             id: specification_list
 
@@ -306,6 +493,47 @@ MDScreenManager:
                         spacing: 20
                         padding: 20
 
+                        MDBoxLayout:
+                            padding: 20
+                            size_hint_y: None
+                            height: 140
+
+                            MDCard:
+                                size_hint_y: None
+                                height: 100
+
+                                MDGridLayout:
+                                    height: 100
+                                    size_hint_y: None
+                                    cols: 8
+                                    rows: 1
+                                    spacing: 10
+
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер наряд-задания"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер договора"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Дата наряд-задания"
+                                    MDLabel:
+                                        text: "Номер работы"
+                                    MDLabel:
+                                        text: "Учетный номер работника"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Сумма в рублях"
+                                    MDLabel:
+                                        width: 50
+                                        size_hint_x: None
+                                        text: ""
+
                         TaskView:
                             id: task_list
 
@@ -315,6 +543,90 @@ MDScreenManager:
 
                             TableBackButton:
                                 screen_manager: operation_table_screen_manager
+                                back_screen: 'table_choose'
+
+
+    MDScreen:
+        name: 'report_tables'
+
+        Navigation:
+            title: "Оперативные документы"
+
+        MDNavigationLayout:
+            MDScreenManager:
+                id: report_table_screen_manager
+
+                MDScreen:
+                    name: 'table_choose'
+
+                    MDFloatLayout:
+                        size_hint_y: 0.9
+                        padding: 20
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            spacing: 20
+                            adaptive_height: True
+                            adaptive_width: True
+                            size_hint: None, None
+                            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
+                                text: "Отчёт по клиентам"
+                                on_press: report_table_screen_manager.current = 'customer_report_view'; customer_report_list.refresh()
+
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
+                                text: "Назад"
+                                on_press: main_screen_manager.current = 'main'
+
+                MDScreen:
+                    name: 'customer_report_view'
+
+                    Navigation:
+                        title: "Спецификация на выполнение работ"
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: 0.9
+                        spacing: 20
+                        padding: 20
+
+                        MDBoxLayout:
+                            padding: 20
+                            size_hint_y: None
+                            height: 140
+
+                            MDCard:
+                                size_hint_y: None
+                                height: 100
+
+                                MDGridLayout:
+                                    height: 100
+                                    size_hint_y: None
+                                    cols: 3
+                                    rows: 1
+                                    spacing: 10
+
+                                    MDLabel:
+                                        text: "Номер клиента"
+                                    MDLabel:
+                                        text: "Количество выполненных договоров"
+                                    MDLabel:
+                                        text: "Общая стоимость выполненных договоров"
+
+                        CustomerReportView:
+                            id: customer_report_list
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: 0.1
+
+                            TableBackButton:
+                                screen_manager: report_table_screen_manager
                                 back_screen: 'table_choose'
 
     MDScreen:
