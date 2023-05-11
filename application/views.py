@@ -5,8 +5,10 @@ from kivymd.uix.button import MDRectangleFlatButton, MDIconButton
 from kivymd.uix.expansionpanel import MDExpansionPanelOneLine, MDExpansionPanel
 from kivymd.uix.textfield import MDTextField
 from kivy.animation import Animation
+from kivymd.toast import toast
 
 from dataclasses import astuple, asdict
+from sqlite3 import IntegrityError
 
 from database_view import BaseDataBaseView, BaseRecord, Customer, Worker, Work, SPT, Specification, Task
 from cards import Card, CustomerCard, WorkerCard, WorkCard, SPTCard, SpecificationCard, TaskCard
@@ -66,10 +68,13 @@ class TableView(MDScrollView):
 
     def add(self) -> None:
         record = self.record_type()
-        MDApp.get_running_app().add(self.database_view, record)
-        self.records_list.remove_widget(self.add_button)
-        self._add_card(record)
-        self.records_list.add_widget(self.add_button)
+        try:
+            MDApp.get_running_app().add(self.database_view, record)
+            self.records_list.remove_widget(self.add_button)
+            self._add_card(record)
+            self.records_list.add_widget(self.add_button)
+        except IntegrityError:
+            toast('Сначала сохраните созданную запись')
 
     def refresh(self) -> None:
         self.records = self.database_view.get_table()

@@ -7,7 +7,6 @@ from kivymd.uix.navigationdrawer import MDNavigationDrawer
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.filemanager import MDFileManager
-from kivymd.uix.spinner import MDSpinner
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivymd.toast import toast
@@ -18,12 +17,12 @@ import os
 import pathlib
 from dataclasses import astuple
 from time import sleep
-from threading import Thread
+from sqlite3 import IntegrityError
 
 from views import TableView, CustomerView, WorkerView, WorkView, SPTView, SpecificationView, TaskView
 from cards import Card
-from database_view import CustomerList, Customer, Workers, Worker, WorksCatalog, Work, SPTList, SPT,\
-    SpecificationList, Specification, TaskList, Task, BaseDataBaseView, BaseRecord
+from database_view import CustomerList, Workers, WorksCatalog, SPTList,\
+    SpecificationList, TaskList, BaseDataBaseView, BaseRecord
 from database import DataBase
 
 
@@ -153,6 +152,7 @@ class KursApp(MDApp):
     def add(self, table_view: BaseDataBaseView, record: BaseRecord):
         table_view.add(record)
 
+
     def delete(self, records_list, card: Card):
         self.task_view.delete(card.id)
         records_list.remove_widget(card)
@@ -164,7 +164,10 @@ class KursApp(MDApp):
             list_fields = [widget.text for widget in card.content.children if isinstance(widget, MDTextField)][::-1]
             for i in range(len(card.get_lists())):
                 work_codes.append(list_fields[i::len(card.get_lists())])
-        limiter_pos = astuple(record_view.record_type()).index([])
+        try:
+            limiter_pos = astuple(record_view.record_type()).index([])
+        except ValueError:
+            limiter_pos = 0
         record_view.database_view.update(card.id, record_view.record_type(*fields[:limiter_pos], *work_codes, *fields[limiter_pos:]))
         card.id = fields[0]
         for i, field in enumerate(card.get_lists()):

@@ -11,7 +11,7 @@ class DataBase:
 
     def __init__(self, debug=False) -> None:
         if debug:
-            self.__connection = sqlite3.connect(':memory:')
+            self.__connection = sqlite3.connect('./debug.db')
             original_base = sqlite3.connect('./database.db')
             original_base.backup(self.__connection)
             original_base.close()
