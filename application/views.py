@@ -1,5 +1,6 @@
 from kivymd.app import MDApp
 from kivymd.uix.gridlayout import MDGridLayout
+from kivymd.uix.label import MDLabel
 from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.button import MDRectangleFlatButton, MDIconButton
 from kivymd.uix.expansionpanel import MDExpansionPanelOneLine, MDExpansionPanel
@@ -11,9 +12,9 @@ from dataclasses import astuple, asdict
 from sqlite3 import IntegrityError
 
 from database_view import BaseDataBaseView, BaseRecord, Customer, Worker, Work, SPT,\
-    Specification, Task, ReportCustomer, ReportWorker, ReportAll
+    Specification, Task, ReportCustomer, ReportWorker, ReportAll, ReportContract
 from cards import Card, CustomerCard, WorkerCard, WorkCard, SPTCard,\
-    SpecificationCard, TaskCard, CustomerReportCard, WorkerReportCard, AllReportCard
+    SpecificationCard, TaskCard, CustomerReportCard, WorkerReportCard, AllReportCard, ContractReportCard
 
 
 class AddButton(MDRectangleFlatButton):
@@ -254,3 +255,57 @@ class AllReportView(TableView):
         self.record_card_type = AllReportCard
         self.record_type = ReportAll
         super().__init__(**kwargs)
+
+
+class ContractReportView(TableView):
+    def __init__(self, **kwargs):
+        self.database_view = MDApp.get_running_app().contract_report_view
+        self.record_card_type = ContractReportCard
+        self.record_type = ReportContract
+        self.inside_list_cols = 3
+        super().__init__(**kwargs)
+
+    def _add_card(self, record: BaseRecord) -> None:
+        card = self.record_card_type(
+            id=f'{astuple(record)[0]}',
+            **asdict(record),
+            content=MDGridLayout(
+                size_hint_y=None,
+                adaptive_height=True,
+                spacing=10,
+                cols=self.inside_list_cols,
+            ),
+            size_hint_y=None,
+            height=100
+        )
+        self.records_list.add_widget(card)
+
+        card.ids.panel_layout.add_widget(MDExpansionPanel(
+            icon="plus",
+            content=card.content,
+            panel_cls=MDExpansionPanelOneLine(
+                text="Список работ",
+                on_release=(lambda _: self._update_fields(card))
+            )
+        ))
+
+    def _update_fields(self, card: Card):
+        card.content.clear_widgets()
+
+        for fields in zip(*[field for field in card.get_lists() if isinstance(field, list)]):
+            for field in fields:
+                card.content.add_widget(MDLabel(text=str(field)))
+
+        if card.ids.panel_layout.children[0].get_state() == 'open':
+            animation = Animation(
+                height=card.content.height + card.ids.panel_layout.children[0].height,
+                d=card.ids.panel_layout.children[0].opening_time,
+                t=card.ids.panel_layout.children[0].opening_transition
+            )
+        else:
+            animation = Animation(
+                height=100,
+                d=card.ids.panel_layout.children[0].closing_time,
+                t=card.ids.panel_layout.children[0].closing_transition
+            )
+        animation.start(card)

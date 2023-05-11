@@ -550,7 +550,7 @@ MDScreenManager:
         name: 'report_tables'
 
         Navigation:
-            title: "Оперативные документы"
+            title: "Отчётные документы"
 
         MDNavigationLayout:
             MDScreenManager:
@@ -570,6 +570,12 @@ MDScreenManager:
                             adaptive_width: True
                             size_hint: None, None
                             pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
+                                text: "Отчёт по деятельности производственного цеха"
+                                on_press: report_table_screen_manager.current = 'contract_report_view'; contract_report_list.refresh()
 
                             MDRectangleFlatButton:
                                 size_hint_x: 1
@@ -728,6 +734,69 @@ MDScreenManager:
 
                         AllReportView:
                             id: all_report_list
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: 0.1
+
+                            TableBackButton:
+                                screen_manager: report_table_screen_manager
+                                back_screen: 'table_choose'
+
+                MDScreen:
+                    name: 'contract_report_view'
+
+                    Navigation:
+                        title: "Отчёт по выполненным договорам на СПТ"
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: 0.9
+                        spacing: 20
+                        padding: 20
+
+                        MDBoxLayout:
+                            padding: 20
+                            size_hint_y: None
+                            height: 140
+
+                            MDCard:
+                                size_hint_y: None
+                                height: 100
+
+                                MDGridLayout:
+                                    height: 100
+                                    size_hint_y: None
+                                    cols: 4
+                                    rows: 1
+                                    spacing: 10
+
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер договора"
+                                    MDLabel:
+                                        width: 150
+                                        size_hint_x: None
+                                        text: "Номер клиента"
+                                    MDLabel:
+                                        text: "Адрес клиента"
+                                    MDGridLayout:
+                                        height: 100
+                                        size_hint_y: None
+                                        cols: 3
+                                        rows: 1
+                                        spacing: 10
+
+                                        MDLabel:
+                                            text: "Номер работы"
+                                        MDLabel:
+                                            text: "Стоимость в рублях"
+                                        MDLabel:
+                                            text: "Дата выполнения"
+
+                        ContractReportView:
+                            id: contract_report_list
 
                         MDBoxLayout:
                             orientation: 'vertical'

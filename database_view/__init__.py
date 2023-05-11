@@ -8,3 +8,4 @@ from .task_list import TaskList, Task
 from .customer_report import CustomerReport, ReportCustomer
 from .worker_report import WorkerReport, ReportWorker
 from .all_report import AllReport, ReportAll
+from .contract_report import ContractReport, ReportContract

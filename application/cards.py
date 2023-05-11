@@ -82,3 +82,16 @@ class AllReportCard(Card):
     completeContractNumber = NumericProperty(0)
     sptNumber = NumericProperty(0)
     workPrice = NumericProperty(0)
+
+
+class ContractReportCard(Card):
+    contractCode = StringProperty('')
+    customerCode = StringProperty('')
+    customerLocation = StringProperty('')
+    workCode = ListProperty([])
+    workPrice = ListProperty([])
+    taskDate = ListProperty([])
+    content = ObjectProperty()
+
+    def get_lists(self) -> tuple[list]:
+        return self.workCode, self.workPrice, self.taskDate

@@ -331,3 +331,31 @@
             text: str(root.sptNumber)
         MDLabel:
             text: str(root.workPrice)
+
+
+<ContractReportCard>:
+    size_hint_y: None
+    height: 100
+    adaptive_height: True
+
+    MDGridLayout:
+        height: 100
+        size_hint_y: None
+        cols: 4
+        rows: 1
+        spacing: 10
+        adaptive_height: True
+        MDLabel:
+            width: 150
+            size_hint_x: None
+            text: root.contractCode
+        MDLabel:
+            width: 150
+            size_hint_x: None
+            text: root.customerCode
+        MDLabel:
+            text: root.customerLocation
+        MDBoxLayout:
+            orientation: 'vertical'
+            id: panel_layout
+            adaptive_height: True

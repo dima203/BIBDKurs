@@ -18,10 +18,10 @@ import pathlib
 from dataclasses import astuple
 from time import sleep
 
-from views import ListTableView, CustomerView, WorkerView, WorkView, SPTView, SpecificationView, TaskView
+from views import ListTableView
 from cards import Card
 from database_view import CustomerList, Workers, WorksCatalog, SPTList,\
-    SpecificationList, TaskList, BaseDataBaseView, BaseRecord, CustomerReport, WorkerReport, AllReport
+    SpecificationList, TaskList, BaseDataBaseView, BaseRecord, CustomerReport, WorkerReport, AllReport, ContractReport
 from database import DataBase
 
 
@@ -66,6 +66,7 @@ class KursApp(MDApp):
         self.customer_report_view = CustomerReport(self.task_view, self.specification_view, debug)
         self.worker_report_view = WorkerReport(self.worker_view, self.task_view, self.work_view, debug)
         self.all_report_view = AllReport(self.task_view, self.specification_view, debug)
+        self.contract_report_view = ContractReport(self.task_view, self.specification_view, self.work_view, self.customer_view)
 
         self.is_manager_open = False
         self.file_manager = MDFileManager(
