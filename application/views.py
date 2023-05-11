@@ -10,8 +10,10 @@ from kivymd.toast import toast
 from dataclasses import astuple, asdict
 from sqlite3 import IntegrityError
 
-from database_view import BaseDataBaseView, BaseRecord, Customer, Worker, Work, SPT, Specification, Task, ReportCustomer
-from cards import Card, CustomerCard, WorkerCard, WorkCard, SPTCard, SpecificationCard, TaskCard, CustomerReportCard
+from database_view import BaseDataBaseView, BaseRecord, Customer, Worker, Work, SPT,\
+    Specification, Task, ReportCustomer, ReportWorker
+from cards import Card, CustomerCard, WorkerCard, WorkCard, SPTCard,\
+    SpecificationCard, TaskCard, CustomerReportCard, WorkerReportCard
 
 
 class AddButton(MDRectangleFlatButton):
@@ -235,4 +237,12 @@ class CustomerReportView(TableView):
         self.database_view = MDApp.get_running_app().customer_report_view
         self.record_card_type = CustomerReportCard
         self.record_type = ReportCustomer
+        super().__init__(**kwargs)
+
+
+class WorkerReportView(TableView):
+    def __init__(self, **kwargs):
+        self.database_view = MDApp.get_running_app().worker_report_view
+        self.record_card_type = WorkerReportCard
+        self.record_type = ReportWorker
         super().__init__(**kwargs)

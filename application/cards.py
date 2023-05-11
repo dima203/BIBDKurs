@@ -68,3 +68,10 @@ class CustomerReportCard(Card):
     customerCode = StringProperty('')
     contractNumber = NumericProperty(0)
     contractPrice = NumericProperty(0)
+
+
+class WorkerReportCard(Card):
+    workerCode = StringProperty('')
+    workerFIO = StringProperty('')
+    taskNumber = NumericProperty(0)
+    workPrice = NumericProperty(0)

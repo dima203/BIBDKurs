@@ -580,6 +580,12 @@ MDScreenManager:
                             MDRectangleFlatButton:
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
+                                text: "Отчёт по отдельным работникам"
+                                on_press: report_table_screen_manager.current = 'worker_report_view'; worker_report_list.refresh()
+
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
                                 text: "Назад"
                                 on_press: main_screen_manager.current = 'main'
 
@@ -587,7 +593,7 @@ MDScreenManager:
                     name: 'customer_report_view'
 
                     Navigation:
-                        title: "Спецификация на выполнение работ"
+                        title: "Отчёт по клиентам"
 
                     MDBoxLayout:
                         orientation: 'vertical'
@@ -620,6 +626,54 @@ MDScreenManager:
 
                         CustomerReportView:
                             id: customer_report_list
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: 0.1
+
+                            TableBackButton:
+                                screen_manager: report_table_screen_manager
+                                back_screen: 'table_choose'
+
+                MDScreen:
+                    name: 'worker_report_view'
+
+                    Navigation:
+                        title: "Отчёт по отдельным работникам"
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: 0.9
+                        spacing: 20
+                        padding: 20
+
+                        MDBoxLayout:
+                            padding: 20
+                            size_hint_y: None
+                            height: 140
+
+                            MDCard:
+                                size_hint_y: None
+                                height: 100
+
+                                MDGridLayout:
+                                    height: 100
+                                    size_hint_y: None
+                                    cols: 4
+                                    rows: 1
+                                    spacing: 10
+
+                                    MDLabel:
+                                        text: "Номер работника"
+                                    MDLabel:
+                                        text: "ФИО работника"
+                                    MDLabel:
+                                        text: "Общее количество наряд-заданий"
+                                    MDLabel:
+                                        text: "Общая стоимость работ"
+
+                        WorkerReportView:
+                            id: worker_report_list
 
                         MDBoxLayout:
                             orientation: 'vertical'

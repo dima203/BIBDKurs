@@ -287,3 +287,25 @@
             text: str(root.contractNumber)
         MDLabel:
             text: str(root.contractPrice)
+
+
+<WorkerReportCard>:
+    size_hint_y: None
+    height: 100
+    adaptive_height: True
+
+    MDGridLayout:
+        height: 100
+        size_hint_y: None
+        cols: 4
+        rows: 1
+        spacing: 10
+        adaptive_height: True
+        MDLabel:
+            text: root.workerCode
+        MDLabel:
+            text: root.workerFIO
+        MDLabel:
+            text: str(root.taskNumber)
+        MDLabel:
+            text: str(root.workPrice)
