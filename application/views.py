@@ -11,9 +11,9 @@ from dataclasses import astuple, asdict
 from sqlite3 import IntegrityError
 
 from database_view import BaseDataBaseView, BaseRecord, Customer, Worker, Work, SPT,\
-    Specification, Task, ReportCustomer, ReportWorker
+    Specification, Task, ReportCustomer, ReportWorker, ReportAll
 from cards import Card, CustomerCard, WorkerCard, WorkCard, SPTCard,\
-    SpecificationCard, TaskCard, CustomerReportCard, WorkerReportCard
+    SpecificationCard, TaskCard, CustomerReportCard, WorkerReportCard, AllReportCard
 
 
 class AddButton(MDRectangleFlatButton):
@@ -245,4 +245,12 @@ class WorkerReportView(TableView):
         self.database_view = MDApp.get_running_app().worker_report_view
         self.record_card_type = WorkerReportCard
         self.record_type = ReportWorker
+        super().__init__(**kwargs)
+
+
+class AllReportView(TableView):
+    def __init__(self, **kwargs):
+        self.database_view = MDApp.get_running_app().all_report_view
+        self.record_card_type = AllReportCard
+        self.record_type = ReportAll
         super().__init__(**kwargs)

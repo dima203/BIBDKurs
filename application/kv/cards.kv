@@ -309,3 +309,25 @@
             text: str(root.taskNumber)
         MDLabel:
             text: str(root.workPrice)
+
+
+<AllReportCard>:
+    size_hint_y: None
+    height: 100
+    adaptive_height: True
+
+    MDGridLayout:
+        height: 100
+        size_hint_y: None
+        cols: 4
+        rows: 1
+        spacing: 10
+        adaptive_height: True
+        MDLabel:
+            text: str(root.allContractNumber)
+        MDLabel:
+            text: str(root.completeContractNumber)
+        MDLabel:
+            text: str(root.sptNumber)
+        MDLabel:
+            text: str(root.workPrice)

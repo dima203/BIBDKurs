@@ -75,3 +75,10 @@ class WorkerReportCard(Card):
     workerFIO = StringProperty('')
     taskNumber = NumericProperty(0)
     workPrice = NumericProperty(0)
+
+
+class AllReportCard(Card):
+    allContractNumber = NumericProperty(0)
+    completeContractNumber = NumericProperty(0)
+    sptNumber = NumericProperty(0)
+    workPrice = NumericProperty(0)

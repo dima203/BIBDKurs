@@ -586,6 +586,12 @@ MDScreenManager:
                             MDRectangleFlatButton:
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
+                                text: "Отчёт по деятельности производственного цеха"
+                                on_press: report_table_screen_manager.current = 'all_report_view'; all_report_list.refresh()
+
+                            MDRectangleFlatButton:
+                                size_hint_x: 1
+                                pos_hint: {"center_x": 0.5}
                                 text: "Назад"
                                 on_press: main_screen_manager.current = 'main'
 
@@ -674,6 +680,54 @@ MDScreenManager:
 
                         WorkerReportView:
                             id: worker_report_list
+
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            size_hint_y: 0.1
+
+                            TableBackButton:
+                                screen_manager: report_table_screen_manager
+                                back_screen: 'table_choose'
+
+                MDScreen:
+                    name: 'all_report_view'
+
+                    Navigation:
+                        title: "Отчёт по деятельности производственного цеха"
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: 0.9
+                        spacing: 20
+                        padding: 20
+
+                        MDBoxLayout:
+                            padding: 20
+                            size_hint_y: None
+                            height: 140
+
+                            MDCard:
+                                size_hint_y: None
+                                height: 100
+
+                                MDGridLayout:
+                                    height: 100
+                                    size_hint_y: None
+                                    cols: 4
+                                    rows: 1
+                                    spacing: 10
+
+                                    MDLabel:
+                                        text: "Общее количество зарегистрированных договоров"
+                                    MDLabel:
+                                        text: "Общее количество выполненных договоров"
+                                    MDLabel:
+                                        text: "Общее количество обслуженных СПТ"
+                                    MDLabel:
+                                        text: "Общая стоимость выполненных работ в рублях"
+
+                        AllReportView:
+                            id: all_report_list
 
                         MDBoxLayout:
                             orientation: 'vertical'

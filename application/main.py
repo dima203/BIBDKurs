@@ -21,7 +21,7 @@ from time import sleep
 from views import ListTableView, CustomerView, WorkerView, WorkView, SPTView, SpecificationView, TaskView
 from cards import Card
 from database_view import CustomerList, Workers, WorksCatalog, SPTList,\
-    SpecificationList, TaskList, BaseDataBaseView, BaseRecord, CustomerReport, WorkerReport
+    SpecificationList, TaskList, BaseDataBaseView, BaseRecord, CustomerReport, WorkerReport, AllReport
 from database import DataBase
 
 
@@ -65,6 +65,7 @@ class KursApp(MDApp):
 
         self.customer_report_view = CustomerReport(self.task_view, self.specification_view, debug)
         self.worker_report_view = WorkerReport(self.worker_view, self.task_view, self.work_view, debug)
+        self.all_report_view = AllReport(self.task_view, self.specification_view, debug)
 
         self.is_manager_open = False
         self.file_manager = MDFileManager(
