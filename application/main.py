@@ -66,7 +66,7 @@ class KursApp(MDApp):
         self.customer_report_view = CustomerReport(self.task_view, self.specification_view, debug)
         self.worker_report_view = WorkerReport(self.worker_view, self.task_view, self.work_view, debug)
         self.all_report_view = AllReport(self.task_view, self.specification_view, debug)
-        self.contract_report_view = ContractReport(self.task_view, self.specification_view, self.work_view, self.customer_view)
+        self.contract_report_view = ContractReport(self.task_view, self.specification_view, self.work_view, self.customer_view, debug)
 
         self.is_manager_open = False
         self.file_manager = MDFileManager(
