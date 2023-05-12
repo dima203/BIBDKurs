@@ -13,7 +13,7 @@ from sqlite3 import IntegrityError
 
 from database_view import BaseDataBaseView, BaseRecord, Customer, Worker, Work, SPT,\
     Specification, Task, ReportCustomer, ReportWorker, ReportAll, ReportContract
-from cards import Card, CustomerCard, WorkerCard, WorkCard, SPTCard,\
+from .cards import Card, CustomerCard, WorkerCard, WorkCard, SPTCard,\
     SpecificationCard, TaskCard, CustomerReportCard, WorkerReportCard, AllReportCard, ContractReportCard
 
 

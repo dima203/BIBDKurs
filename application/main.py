@@ -14,12 +14,11 @@ from kivymd.toast import toast
 import hashlib
 import datetime
 import os
-import pathlib
 from dataclasses import astuple
 from time import sleep
 
-from views import ListTableView
-from cards import Card
+from .views import ListTableView
+from .cards import Card
 from database_view import CustomerList, Workers, WorksCatalog, SPTList,\
     SpecificationList, TaskList, BaseDataBaseView, BaseRecord, CustomerReport, WorkerReport, AllReport, ContractReport
 from database import DataBase
@@ -38,7 +37,7 @@ class MainScreen(MDScreen):
 
 
 class KursApp(MDApp):
-    kv_directory = './kv'
+    kv_directory = './application/kv'
 
     def __init__(self, debug=False, backup=True, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -138,7 +137,7 @@ class KursApp(MDApp):
         self.loading_screen = None
 
     def file_manager_open(self):
-        self.file_manager.show(str(pathlib.Path(os.getcwd() + '/backup/')))
+        self.file_manager.show(str(os.getcwd() + '/backup/'))
         self.is_manager_open = True
 
     def select_path(self, path):
@@ -176,9 +175,3 @@ class KursApp(MDApp):
         for i, field in enumerate(card.get_lists()):
             field.clear()
             field.extend(work_codes[i])
-
-
-# for tests
-if __name__ == '__main__':
-    application = KursApp(True, False)
-    application.run()
