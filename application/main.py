@@ -5,17 +5,20 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.toolbar import MDTopAppBar
 from kivymd.uix.navigationdrawer import MDNavigationDrawer
 from kivymd.uix.textfield import MDTextField
+from kivymd.uix.screenmanager import MDScreenManager
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.filemanager import MDFileManager
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivymd.toast import toast
+from kivy.lang import Builder
 
 import hashlib
 import datetime
 import os
 from dataclasses import astuple
 from time import sleep
+import asyncio
 
 from .views import ListTableView
 from .cards import Card
@@ -32,41 +35,84 @@ class Navigation(MDTopAppBar):
     pass
 
 
+class LoadingScreen(MDScreen):
+    pass
+
+
+class AuthScreen(MDScreen):
+    pass
+
+
 class MainScreen(MDScreen):
     pass
+
+
+class TablesScreen(MDScreen):
+    pass
+
+
+class OperationTablesScreen(MDScreen):
+    pass
+
+
+class ReportScreen(MDScreen):
+    pass
+
+
+class RestoreScreen(MDScreen):
+    pass
+
+
+class MainScreenManager(MDScreenManager):
+    id = 'main_screen_manager'
 
 
 class KursApp(MDApp):
     kv_directory = './application/kv'
 
-    def __init__(self, debug=False, backup=True, **kwargs) -> None:
+    def __init__(self, debug=False, backup=True, **kwargs):
         super().__init__(**kwargs)
 
-        self.theme_cls.theme_style = 'Light'
+        self.debug = debug
+        self.backup = backup
+
+    def build(self, **kwargs):
+        self.theme_cls.theme_style = 'Dark'
         self.theme_cls.primary_palette = 'Teal'
         self.theme_cls.accent_palette = 'Red'
         self.theme_cls.accent_hue = '900'
         self.error_color = "#FF0000"
         self.save_color = '#00FF00'
 
-        self.debug = debug
-        self.backup = backup
+        self.screen_manager = MainScreenManager()
+        self.loading()
+        return self.screen_manager
 
+    def on_start(self):
+        Clock.schedule_once(self.start, 5)
+
+    def loading(self) -> None:
+        Builder.load_file(self.kv_directory + '/loader.kv')
+        self.screen_manager.add_widget(LoadingScreen())
+        self.screen_manager.current = 'loading'
+
+    def start(self, dt):
         self.database = DataBase(self.debug)
+        self.root.do_layout()
 
-        self.customer_view = CustomerList(debug)
-        self.worker_view = Workers(debug)
-        self.work_view = WorksCatalog(debug)
-        self.spt_view = SPTList(debug)
+        self.customer_view = CustomerList(self.debug)
+        self.worker_view = Workers(self.debug)
+        self.work_view = WorksCatalog(self.debug)
+        self.spt_view = SPTList(self.debug)
 
-        self.specification_view = SpecificationList(debug)
-        self.task_view = TaskList(debug)
+        self.specification_view = SpecificationList(self.debug)
+        self.task_view = TaskList(self.debug)
 
-        self.customer_report_view = CustomerReport(self.task_view, self.specification_view, debug)
-        self.worker_report_view = WorkerReport(self.worker_view, self.task_view, self.work_view, debug)
-        self.all_report_view = AllReport(self.task_view, self.specification_view, debug)
+        self.customer_report_view = CustomerReport(self.task_view, self.specification_view, self.debug)
+        self.worker_report_view = WorkerReport(self.worker_view, self.task_view, self.work_view, self.debug)
+        self.all_report_view = AllReport(self.task_view, self.specification_view, self.debug)
         self.contract_report_view = ContractReport(self.task_view, self.specification_view,
-                                                   self.work_view, self.customer_view, debug)
+                                                   self.work_view, self.customer_view, self.debug)
 
         self.is_manager_open = False
         self.file_manager = MDFileManager(
@@ -75,6 +121,15 @@ class KursApp(MDApp):
         )
         self.loading_screen = None
         self.current_datetime = None
+
+        Builder.load_file(self.kv_directory + '/main.kv')
+        self.root.add_widget(AuthScreen())
+        self.root.add_widget(MainScreen())
+        self.root.add_widget(TablesScreen())
+        self.root.add_widget(OperationTablesScreen())
+        self.root.add_widget(ReportScreen())
+        self.root.add_widget(RestoreScreen())
+        self.root.current = 'auth'
 
     def auth(self, login: str, password: str) -> None:
         m = hashlib.sha256()
