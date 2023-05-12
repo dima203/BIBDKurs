@@ -87,7 +87,7 @@ class ListTableView(TableView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.add_button = AddButton(self.add, text='Добавить')
+        self.add_button = AddButton(self.add, text='Добавить', font_size=20)
         self.records_list.add_widget(self.add_button)
 
     def add(self) -> None:
@@ -146,7 +146,7 @@ class OperationsTableView(ListTableView):
                 width=50,
             ))
 
-        card.content.add_widget(ListAddButton(self._add_inside_list_record, card, text='Добавить'))
+        card.content.add_widget(ListAddButton(self._add_inside_list_record, card, text='Добавить', font_size=20))
         if card.ids.panel_layout.children[0].get_state() == 'open':
             animation = Animation(
                 height=card.content.height + card.ids.panel_layout.children[0].height,

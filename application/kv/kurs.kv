@@ -35,6 +35,7 @@ MDScreenManager:
                     id: password
                     password: True
                 MDRectangleFlatButton:
+                    font_size: 20
                     text: "Войти"
                     on_press: app.auth(login.text, password.text)
                     pos_hint: {"center_x": 0.5}
@@ -58,30 +59,35 @@ MDScreenManager:
                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                 MDRectangleFlatButton:
+                    font_size: 20
                     size_hint_x: 1
                     pos_hint: {"center_x": 0.5}
                     text: "Справочные документы"
                     on_press: main_screen_manager.current = 'tables'
 
                 MDRectangleFlatButton:
+                    font_size: 20
                     size_hint_x: 1
                     pos_hint: {"center_x": 0.5}
                     text: "Оперативные документы"
                     on_press: main_screen_manager.current = 'operation_tables'
 
                 MDRectangleFlatButton:
+                    font_size: 20
                     size_hint_x: 1
                     pos_hint: {"center_x": 0.5}
                     text: "Отчетные документы"
                     on_press: main_screen_manager.current = 'report_tables'
 
                 MDRectangleFlatButton:
+                    font_size: 20
                     size_hint_x: 1
                     pos_hint: {"center_x": 0.5}
                     text: "Восстановление данных"
                     on_press: main_screen_manager.current = 'restore'
 
                 MDRectangleFlatButton:
+                    font_size: 20
                     size_hint_x: 1
                     pos_hint: {"center_x": 0.5}
                     text: "Выход"
@@ -113,30 +119,35 @@ MDScreenManager:
                             pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Список клиентов СПТ"
                                 on_press: table_screen_manager.current = 'customer_view'; customer_list.refresh()
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Справочник работников цеха"
                                 on_press: table_screen_manager.current = 'worker_view'; worker_list.refresh()
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Каталог работ"
                                 on_press: table_screen_manager.current = 'work_view'; work_list.refresh()
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Справочник СПТ"
                                 on_press: table_screen_manager.current = 'spt_view'; spt_list.refresh()
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Назад"
@@ -398,18 +409,21 @@ MDScreenManager:
                             pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Спецификация на выполнение работ"
                                 on_press: operation_table_screen_manager.current = 'specification_view'; specification_list.refresh()
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Наряд-задание"
                                 on_press: operation_table_screen_manager.current = 'task_view'; task_list.refresh()
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Назад"
@@ -572,30 +586,35 @@ MDScreenManager:
                             pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Отчёт по деятельности производственного цеха"
                                 on_press: report_table_screen_manager.current = 'contract_report_view'; contract_report_list.refresh()
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Отчёт по клиентам"
                                 on_press: report_table_screen_manager.current = 'customer_report_view'; customer_report_list.refresh()
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Отчёт по отдельным работникам"
                                 on_press: report_table_screen_manager.current = 'worker_report_view'; worker_report_list.refresh()
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Отчёт по деятельности производственного цеха"
                                 on_press: report_table_screen_manager.current = 'all_report_view'; all_report_list.refresh()
 
                             MDRectangleFlatButton:
+                                font_size: 20
                                 size_hint_x: 1
                                 pos_hint: {"center_x": 0.5}
                                 text: "Назад"
@@ -822,6 +841,7 @@ MDScreenManager:
                 size_hint_y: 0.9
 
                 MDRectangleFlatIconButton:
+                    font_size: 20
                     text: "Выбрать файл для восстановления"
                     icon: "folder"
                     pos_hint: {'center_x': .5, 'center_y': .5}
@@ -837,6 +857,7 @@ MDScreenManager:
 
 
 <TableBackButton@MDRectangleFlatButton>:
+    font_size: 20
     text: "Назад"
     size_hint_x: 0.2
     pos_hint: {"center_x": 0.5}
