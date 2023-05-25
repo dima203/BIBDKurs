@@ -18,7 +18,6 @@ import datetime
 import os
 from dataclasses import astuple
 from time import sleep
-import asyncio
 
 from .views import ListTableView
 from .cards import Card
@@ -63,6 +62,10 @@ class RestoreScreen(MDScreen):
     pass
 
 
+class ReferenceScreen(MDScreen):
+    pass
+
+
 class MainScreenManager(MDScreenManager):
     id = 'main_screen_manager'
 
@@ -77,7 +80,7 @@ class KursApp(MDApp):
         self.backup = backup
 
     def build(self, **kwargs):
-        self.theme_cls.theme_style = 'Dark'
+        self.theme_cls.theme_style = 'Light'
         self.theme_cls.primary_palette = 'Teal'
         self.theme_cls.accent_palette = 'Red'
         self.theme_cls.accent_hue = '900'
@@ -129,6 +132,7 @@ class KursApp(MDApp):
         self.root.add_widget(OperationTablesScreen())
         self.root.add_widget(ReportScreen())
         self.root.add_widget(RestoreScreen())
+        self.root.add_widget(ReferenceScreen())
         self.root.current = 'auth'
 
     def auth(self, login: str, password: str) -> None:

@@ -1,5 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 from kivy_deps import sdl2, glew
+from kivymd import hooks_path as kivymd_hooks_path
+
 
 block_cipher = None
 
@@ -8,9 +10,9 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('database.db', '.'), ('application/kv/*.kv', 'application/kv')],
+    datas=[('database.db', '.'), ('application/kv/*.kv', './application/kv')],
     hiddenimports=[],
-    hookspath=[],
+    hookspath=[kivymd_hooks_path],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
@@ -36,7 +38,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=True,
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,

@@ -87,6 +87,13 @@
                 font_size: 20
                 size_hint_x: 1
                 pos_hint: {"center_x": 0.5}
+                text: "Справка"
+                on_press: app.root.current = 'reference'
+
+            MDRectangleFlatButton:
+                font_size: 20
+                size_hint_x: 1
+                pos_hint: {"center_x": 0.5}
                 text: "Выход"
                 on_press: app.exit()
 
@@ -303,8 +310,6 @@
                                 MDLabel:
                                     text: "Стоимость работы в рублях"
                                 MDLabel:
-                                    width: 150
-                                    size_hint_x: None
                                     text: "Время выполнения работы в часах"
                                 MDLabel:
                                     width: 50
@@ -821,6 +826,49 @@
                         TableBackButton:
                             screen_manager: report_table_screen_manager
                             back_screen: 'table_choose'
+
+<ReferenceScreen>:
+    name: 'reference'
+
+    Navigation:
+        title: "Справка"
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        size_hint_y: 0.9
+        spacing: 20
+        padding: 20
+
+        MDGridLayout:
+            rows: 4
+            cols: 2
+            spacing: 10
+
+            MDLabel:
+                size_hint_x: None
+                width: 200
+                text: "Название: "
+            MDLabel:
+                text: 'АРМ "Начальника производственного цеха"'
+            MDLabel:
+                size_hint_x: None
+                width: 200
+                text: "Автор: "
+            MDLabel:
+                text: "Качан Дмитрий Сергеевич - cтудент БрГТУ, ФЕИС, АСОИ, группа АС-59"
+            MDLabel:
+                size_hint_x: None
+                width: 200
+                text: "Версия: "
+            MDLabel:
+                text: "1.0.0"
+            MDLabel:
+                size_hint_x: None
+                width: 200
+                text: "Описание: "
+            MDLabel:
+                text: "Данная АРМ была разработана с целью сокращения трудозатрат по ведению информации и отчетных документов при решении комплекса задач при оказании услуг по эксплуатации."
+
 
 <RestoreScreen>:
     name: 'restore'
